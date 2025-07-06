@@ -1,179 +1,107 @@
-# YZTA AI 17 - Disease Prediction Project
+# MediRisk
 
-## 🔍 Project Overview
+## Takım İsmi
+**MedOps Takımı**
 
-This project develops a machine learning model to predict cardiovascular disease risk based on patient medical data. The system provides a web-based interface for healthcare professionals to input patient information and receive risk assessments.
+## Takım Üyeleri
+- [Feyzanur İnan](https://github.com/feyzann) - Scrum Master
+- [Büşra Deveci](https://github.com/busradeveci) - Product Owner
+- [Eren Cice](https://github.com/erencice) - Developer
+- [Rabia Yaşa](https://github.com/rabiayasa4) - Developer
+- [Onur Kayabaş](https://github.com/Onurkayabas1) - Developer
 
-## 📊 Dataset
+## Ürün İsmi
+**MediRisk Web Uygulaması**  
+> (Sağlık risklerini daha oluşmadan önce tahmin edin)
 
-The project uses a comprehensive cardiovascular disease dataset containing the following features:
+## Product Backlog URL
+MedOps Trello Backlog Board  
+- Backlog, sprint raporlarındaki ekran görüntüleriyle belgelendi.
 
-- **Patient ID**: Unique identifier for each patient
-- **Age**: Patient's age
-- **Gender**: Patient's gender (1 = Male, 0 = Female)
-- **Chest Pain**: Type of chest pain (0-3 scale)
-- **Resting BP**: Resting blood pressure
-- **Serum Cholesterol**: Serum cholesterol level
-- **Fasting Blood Sugar**: Fasting blood sugar > 120 mg/dl (1 = true, 0 = false)
-- **Resting Electrocardiogram**: Resting electrocardiographic results
-- **Max Heart Rate**: Maximum heart rate achieved
-- **Exercise Angina**: Exercise induced angina (1 = yes, 0 = no)
-- **Oldpeak**: ST depression induced by exercise relative to rest
-- **Slope**: Slope of the peak exercise ST segment
-- **Number of Major Vessels**: Number of major vessels colored by flourosopy (0-3)
-- **Target**: Cardiovascular disease diagnosis (1 = disease, 0 = no disease)
+## Ürün Açıklaması
+MediRisk uygulaması; kronik böbrek hastalığı, fetal sağlık, meme kanseri ve depresyon gibi çeşitli sağlık durumları için farklı veri setlerini kullanarak, kullanıcıların kendi sağlık risklerini değerlendirmelerine olanak tanıyan bir web platformudur.  
+Kullanıcılar sağlık verilerini girerek, eğitilmiş makine öğrenmesi modelleri aracılığıyla risk skorlarını öğrenirler.
 
-## 🏗️ Project Structure
+## Ürün Özellikleri
+- Çoklu sağlık veri setleri (Chronic Kidney Disease, Fetal Health, Breast Cancer, Student Depression)
+- ML tabanlı risk tahmin modelleri
+- Kullanıcı dostu arayüz
+- Risk skorlarını grafiklerle görselleştirme
+- Güvenli oturum yönetimi ve kullanıcı doğrulama
 
-```
-YZTA-AI-17/
-├── app/
-│   ├── __init__.py              # Flask app initialization
-│   ├── routes.py                # Web application routes
-│   ├── utils.py                 # Utility functions
-│   ├── model/
-│   │   ├── model_cad/
-│   │   │   ├── __init__.py
-│   │   │   ├── predict.py       # Model prediction logic
-│   │   │   └── preprocess.py    # Data preprocessing
-│   │   └── shared/
-│   │       └── preprocessing_utils.py  # Shared preprocessing utilities
-│   └── templates/
-│       └── index.html           # Web interface template
-├── data/
-│   └── Cardiovascular_Disease_Dataset.csv  # Training dataset
-├── notebooks/                   # Jupyter notebooks for analysis
-├── static/
-│   └── style.css               # Web interface styling
-├── tests/
-│   ├── card.ipynb              # Testing notebook
-│   └── cardiovascular_model.pkl # Trained model file
-├── config.py                   # Configuration settings
-├── requirements.txt            # Python dependencies
-└── README.md                   # Project documentation
-```
+## Hedef Kitle
+- Sağlık durumu hakkında ön değerlendirme yapmak isteyen kullanıcılar
+- Kronik hastalık riski bulunan bireyler
+- Sağlık analitiği uygulamalarına ilgi duyanlar
 
-## 🚀 Getting Started
+<details>
+<summary> <h3> SPRINT 1 </h3> </summary>
 
-### Prerequisites
-
-- Python 3.7+
-- pip package manager
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd YZTA-AI-17
-```
-
-2. Create a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-3. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-### Running the Application
-
-1. Start the Flask development server:
-```bash
-python app.py
-```
-
-2. Open your browser and navigate to `http://localhost:5000`
-
-## 🔧 Usage
-
-1. **Web Interface**: Access the web application to input patient data and receive cardiovascular risk predictions
-2. **API Endpoints**: Use the REST API for programmatic access to the prediction model
-3. **Jupyter Notebooks**: Explore the data analysis and model development process in the `notebooks/` directory
-
-## 🧠 Model Information
-
-The cardiovascular disease prediction model is trained using machine learning algorithms to analyze patient medical data and predict the likelihood of cardiovascular disease. The model considers multiple risk factors including:
-
-- Demographics (age, gender)
-- Clinical measurements (blood pressure, cholesterol, heart rate)
-- Cardiac test results (ECG, exercise stress test)
-- Symptom indicators (chest pain, exercise angina)
-
-## 📈 Performance Metrics
-
-The model's performance is evaluated using standard classification metrics:
-- Accuracy
-- Precision
-- Recall
-- F1-Score
-- ROC-AUC
-
-## 🛠️ Technology Stack
-
-- **Backend**: Flask (Python web framework)
-- **Machine Learning**: scikit-learn, pandas, numpy
-- **Frontend**: HTML, CSS, JavaScript
-- **Data Processing**: pandas, numpy
-- **Model Serialization**: pickle
-- **Development**: Jupyter Notebooks
-
-## 📝 API Documentation
-
-### Prediction Endpoint
-
-```
-POST /predict
-Content-Type: application/json
-
-{
-  "age": 45,
-  "gender": 1,
-  "chestpain": 2,
-  "restingBP": 130,
-  "serumcholestrol": 240,
-  "fastingbloodsugar": 0,
-  "restingrelectro": 1,
-  "maxheartrate": 150,
-  "exerciseangia": 0,
-  "oldpeak": 2.5,
-  "slope": 2,
-  "noofmajorvessels": 1
-}
-```
-
-Response:
-```json
-{
-  "prediction": 1,
-  "probability": 0.85,
-  "risk_level": "High"
-}
-```
-
-## 📊 Data Analysis
-
-The project includes comprehensive data analysis in Jupyter notebooks:
-- Exploratory Data Analysis (EDA)
-- Feature correlation analysis
-- Model performance evaluation
-- Data visualization
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 🏥 Disclaimer
-
-This tool is for educational and research purposes only. It should not be used as a substitute for professional medical advice, diagnosis, or treatment. Always consult with qualified healthcare professionals for medical decisions.
+- **Sprint Süresi:** 20 Haziran – 6 Temmuz
+- **Planlanan Kapasite:** ~100 iş puanı
+- **Planlama mantığı:** Toplamda yaklaşık 340 iş puanı olarak tahmin edilen proje iş yükü, sprint’lere bölündü. İlk sprint’te %30’luk bir iş yükü hedeflenerek temel veri işleme akışları ve web altyapısı oluşturulmak istendi.
 
 ---
 
-**Project developed as part of YZTA AI 17 initiative**
+### Tamamlanan Çalışmalar
+- **Veri Setlerinin Toplanması ve İncelenmesi**
+  - Chronic Kidney Disease, Fetal Health, Breast Cancer ve Student Depression veri setleri projeye dahil edildi.
+  - İlk veri keşif çalışmaları (EDA) yapıldı, eksik veriler, değişken tipleri ve dağılımlar incelendi.
+
+- **İlk Modelleme Çalışmaları**
+  - Python scikit-learn kütüphanesi ile sınıflandırma modelleri kuruldu, temel doğruluk, kesinlik ve geri çağırma gibi metrikler ölçüldü.
+  - Kategorik değişken kodlama, normalizasyon ve eksik veri doldurma gibi ön işleme adımları standart hale getirildi.
+
+- **Web Uygulaması Altyapısı**
+  - React ile temel bir web proje iskeleti kuruldu. Ana yönlendirmeler (routing) ve sayfa yapısı oluşturuldu.
+  - Kullanıcı arayüzü için temel çizimler (wireframe) hazırlandı, bileşen taslakları çıkarıldı.
+
+---
+
+### Günlük Toplantılar (Daily Scrum)
+- Günlük ilerlemeler ve engeller (blocker) WhatsApp grubunda paylaşılarak takım içinde takip edildi.
+-  [WhatsApp görsellerine git](./sprintOne/wp_ss)
+
+---
+
+### Sprint Panosu
+- Sprint görevleri Trello üzerinde takip edilerek görsellerle belgelendi.
+-  [Trello görsellerine git](./sprintOne/trello_ss)
+
+---
+
+### Mevcut Uygulama Durumu
+- Web kullanıcı arayüzünde temel sayfalar ve yönlendirmeler oluşturuldu.
+- Makine öğrenmesi API’leri için temel sözleşmeler (endpoint planı) belirlendi.
+-  [Web görsellerine git](./sprintOne/app_ss)
+
+---
+
+### Sprint Gözden Geçirme (Review)
+- Veri setleri başarıyla sisteme entegre edildi, ilk makine öğrenmesi modelleri eğitildi ve temel performans raporları çıkarıldı.
+- Frontend (React) ve backend (FastAPI + scikit-learn) teknolojilerine kesin olarak karar verildi.
+- Son toplantıda, bir sonraki sprint için öncelikli işlerin tahmin ve veri tahmin servisleri olmasına karar verildi.
+
+---
+
+### Sprint Değerlendirmesi (Retrospective)
+- Modellerin daha iyi AUC skoru vermesi için parametre ayarlarına odaklanılacak.
+- Web özelliklerinin daha hızlı tamamlanabilmesi için haftasonu ek geliştirme oturumları yapılacak.
+- Test kapsamının artırılması ve sürekli entegrasyon (CI) süreçlerinin başlatılması için backlog’a yeni işler eklendi.
+
+---
+
+## Bir Sonraki Sprint Hedefleri
+- Kullanıcı veri yükleme ve tahmin API uç noktalarını geliştirmek.
+- Eğitim modellerinin kapsamlı testlerini yaparak doğruluk ve güvenilirliklerini sağlamak.
+- Kullanıcı risk skorlarını grafiklerle görselleştirecek bileşenleri oluşturmak.
+- Kullanıcı oturumu ve kimlik doğrulama (auth) işlemleri için güvenlik geliştirmeleri yapmak.
+
+---
+
+## Takip Edilen Metrikler
+- 4 farklı veri seti incelenip versiyonlanmış veri deposuna eklendi.
+- İlk modeller eğitildi ve performans metrikleri kaydedildi.
+- Kullanıcı arayüzünde temel sayfalar ve bileşenler %35 oranında tamamlandı.
+
+</details>
