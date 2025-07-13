@@ -4,10 +4,11 @@
 
 This project develops a machine learning model to predict cardiovascular disease risk based on patient medical data. The system provides a web-based interface for healthcare professionals to input patient information and receive risk assessments.
 
-## 📊 Dataset
+## 📊 Datasets
 
-The project uses a comprehensive cardiovascular disease dataset containing the following features:
+The project encompasses three comprehensive medical datasets for different health prediction models:
 
+### 🫀 Cardiovascular Disease Dataset
 - **Patient ID**: Unique identifier for each patient
 - **Age**: Patient's age
 - **Gender**: Patient's gender (1 = Male, 0 = Female)
@@ -23,6 +24,21 @@ The project uses a comprehensive cardiovascular disease dataset containing the f
 - **Number of Major Vessels**: Number of major vessels colored by flourosopy (0-3)
 - **Target**: Cardiovascular disease diagnosis (1 = disease, 0 = no disease)
 
+### 🎗️ Breast Cancer Dataset (Wisconsin)
+- **Mean/SE/Worst Values**: For radius, texture, perimeter, area, smoothness, compactness, concavity, concave points, symmetry, fractal dimension
+- **Target**: Malignant (0) or Benign (1) classification
+- **Features**: 30 morphometric measurements of cell nuclei
+
+### 👶 Fetal Health Dataset (CTG)
+- **Baseline Value**: Baseline fetal heart rate
+- **Accelerations**: Accelerations per second
+- **Fetal Movement**: Fetal movements per second
+- **Uterine Contractions**: Uterine contractions per second
+- **Decelerations**: Light, severe, and prolonged decelerations
+- **Variability**: Short-term and long-term variability measures
+- **Histogram Features**: Width, min, max, peaks, mode, mean, median, variance, tendency
+- **Target**: Normal (1), Suspect (2), Pathological (3)
+
 ## 🏗️ Project Structure
 
 ```
@@ -34,59 +50,107 @@ YZTA-AI-17/
 │   ├── model/
 │   │   ├── model_cad/
 │   │   │   ├── __init__.py
-│   │   │   ├── predict.py       # Model prediction logic
-│   │   │   └── preprocess.py    # Data preprocessing
+│   │   │   ├── predict.py       # Cardiovascular prediction logic
+│   │   │   └── preprocess.py    # Cardiovascular preprocessing
+│   │   ├── model_breast/
+│   │   │   ├── __init__.py
+│   │   │   ├── predict.py       # Breast cancer prediction logic
+│   │   │   └── preprocess.py    # Breast cancer preprocessing
+│   │   ├── model_fetal/
+│   │   │   ├── __init__.py
+│   │   │   ├── predict.py       # Fetal health prediction logic
+│   │   │   └── preprocess.py    # Fetal health preprocessing
 │   │   └── shared/
 │   │       └── preprocessing_utils.py  # Shared preprocessing utilities
 │   └── templates/
 │       └── index.html           # Web interface template
 ├── data/
-│   └── Cardiovascular_Disease_Dataset.csv  # Training dataset
+│   ├── Cardiovascular_Disease_Dataset.csv  # Cardiovascular dataset
+│   ├── breast_cancer/
+│   │   └── breast_cancer_dataset.csv       # Breast cancer dataset
+│   └── fetal_health/
+│       └── fetal_health_dataset.csv        # Fetal health dataset
 ├── notebooks/                   # Jupyter notebooks for analysis
 ├── static/
 │   └── style.css               # Web interface styling
 ├── tests/
-│   ├── card.ipynb              # Testing notebook
-│   └── cardiovascular_model.pkl # Trained model file
+│   ├── card.ipynb              # Cardiovascular analysis notebook
+│   ├── breast_cancer_analysis.ipynb  # Breast cancer analysis notebook
+│   ├── fetal_health_analysis.ipynb   # Fetal health analysis notebook
+│   └── cardiovascular_model.pkl      # Trained cardiovascular model
 ├── config.py                   # Configuration settings
 ├── requirements.txt            # Python dependencies
 └── README.md                   # Project documentation
 ```
 
-## 🚀 Getting Started
+## 🚀 Hızlı Başlangıç
 
-### Prerequisites
+### Ön Gereksinimler
+- Python 3.8+
+- pip paket yöneticisi
 
-- Python 3.7+
-- pip package manager
-
-### Installation
-
-1. Clone the repository:
+### Otomatik Kurulum (Önerilen)
 ```bash
-git clone <repository-url>
+# Bağımlılıkları otomatik yükle
+python run.py --install
+
+# Sunucuyu başlat
+python run.py
+```
+
+### Platform-Spesifik Başlatma
+
+#### Windows:
+```cmd
+start.bat
+```
+
+#### macOS/Linux:
+```bash
+./start.sh
+```
+
+### Manuel Kurulum
+```bash
+# 1. Proje dizinine gidin
 cd YZTA-AI-17
-```
 
-2. Create a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+# 2. Virtual environment oluşturun (önerilen)
+python -m venv .venv
 
-3. Install dependencies:
-```bash
+# 3. Virtual environment'ı aktifleştirin
+# Windows:
+.venv\Scripts\activate
+# macOS/Linux:
+source .venv/bin/activate
+
+# 4. Bağımlılıkları yükleyin
 pip install -r requirements.txt
 ```
 
-### Running the Application
+### Uygulamayı Çalıştırma
 
-1. Start the Flask development server:
 ```bash
-python app.py
+# Sunucuyu başlatın
+python run.py
+
+# Debug modunda:
+python run.py --debug
+
+# Ağ erişimi için:
+python run.py --host 0.0.0.0
+
+# Özel port:
+python run.py --port 8080
 ```
 
-2. Open your browser and navigate to `http://localhost:5000`
+### 🌐 Erişim Adresleri
+- **Yerel**: `http://localhost:5000`
+- **Ağ**: `http://[IP-ADRESİNİZ]:5000`
+- **Mobil**: Aynı WiFi ağında ağ adresini kullanın
+
+### 📱 Çapraz Platform Dağıtım
+Detaylı kurulum ve farklı bilgisayarlarda çalıştırma talimatları için [DEPLOYMENT.md](DEPLOYMENT.md) dosyasına bakın.
 
 ## 🔧 Usage
 
@@ -96,12 +160,27 @@ python app.py
 
 ## 🧠 Model Information
 
-The cardiovascular disease prediction model is trained using machine learning algorithms to analyze patient medical data and predict the likelihood of cardiovascular disease. The model considers multiple risk factors including:
+The project includes three specialized machine learning models for different medical prediction tasks:
 
+### 🫀 Cardiovascular Disease Model
+The cardiovascular disease prediction model analyzes patient medical data to predict the likelihood of heart disease. Key factors include:
 - Demographics (age, gender)
 - Clinical measurements (blood pressure, cholesterol, heart rate)
 - Cardiac test results (ECG, exercise stress test)
 - Symptom indicators (chest pain, exercise angina)
+
+### 🎗️ Breast Cancer Model
+The breast cancer diagnosis model uses morphometric measurements of cell nuclei to classify tumors as benign or malignant. Features include:
+- Cell nucleus measurements (radius, texture, perimeter, area)
+- Shape characteristics (smoothness, compactness, concavity)
+- Statistical measures (mean, standard error, worst values)
+
+### 👶 Fetal Health Model
+The fetal health classification model analyzes cardiotocography (CTG) data to assess fetal well-being during pregnancy:
+- Fetal heart rate patterns (baseline, variability, accelerations)
+- Uterine contraction monitoring
+- Deceleration patterns (light, severe, prolonged)
+- Statistical histogram features of heart rate data
 
 ## 📈 Performance Metrics
 

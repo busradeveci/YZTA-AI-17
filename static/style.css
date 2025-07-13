@@ -1,0 +1,894 @@
+/* YZTA-AI-17 Medical Prediction System Styles */
+
+/* CSS Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Color Palette */
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --success-color: #27ae60;
+    --warning-color: #f39c12;
+    --info-color: #17a2b8;
+    --light-color: #ecf0f1;
+    --dark-color: #34495e;
+    --white-color: #ffffff;
+    
+    /* Medical Colors */
+    --cardiovascular-color: #e74c3c;
+    --breast-cancer-color: #e91e63;
+    --fetal-health-color: #9c27b0;
+    
+    /* Typography */
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 1.875rem;
+    
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+    
+    /* Border Radius */
+    --border-radius-sm: 0.25rem;
+    --border-radius-md: 0.5rem;
+    --border-radius-lg: 0.75rem;
+    --border-radius-xl: 1rem;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    
+    /* Transitions */
+    --transition-fast: 0.15s ease-in-out;
+    --transition-normal: 0.3s ease-in-out;
+    --transition-slow: 0.5s ease-in-out;
+}
+
+/* Base Typography */
+body {
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    color: var(--dark-color);
+    background-color: var(--light-color);
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: var(--spacing-md);
+}
+
+h1 { font-size: var(--font-size-3xl); }
+h2 { font-size: var(--font-size-2xl); }
+h3 { font-size: var(--font-size-xl); }
+h4 { font-size: var(--font-size-lg); }
+
+p {
+    margin-bottom: var(--spacing-md);
+}
+
+/* Container and Layout */
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header Styles */
+.header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--dark-color) 100%);
+    color: var(--white-color);
+    padding: var(--spacing-lg) var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.logo i {
+    font-size: var(--font-size-3xl);
+    color: var(--accent-color);
+    animation: pulse 2s infinite;
+}
+
+.logo h1 {
+    margin: 0;
+    background: linear-gradient(45deg, var(--white-color), var(--light-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* Navigation Styles */
+.nav {
+    display: flex;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-lg);
+    text-decoration: none;
+    color: var(--light-color);
+    border-radius: var(--border-radius-lg);
+    transition: var(--transition-normal);
+    font-weight: 500;
+    border: 2px solid transparent;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.nav-link.active {
+    background-color: var(--white-color);
+    color: var(--primary-color);
+    border-color: var(--secondary-color);
+}
+
+.nav-link i {
+    font-size: var(--font-size-lg);
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: var(--spacing-2xl);
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Overview Section */
+.overview {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+}
+
+.overview h2 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-lg);
+}
+
+.overview .description {
+    font-size: var(--font-size-lg);
+    color: var(--dark-color);
+    max-width: 800px;
+    margin: 0 auto var(--spacing-2xl);
+    opacity: 0.8;
+}
+
+/* Model Cards */
+.model-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-2xl);
+}
+
+.model-card {
+    background: var(--white-color);
+    border-radius: var(--border-radius-xl);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
+    cursor: pointer;
+    border: 3px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.model-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--cardiovascular-color), var(--breast-cancer-color), var(--fetal-health-color));
+}
+
+.model-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--secondary-color);
+}
+
+.model-card[data-model="cardiovascular"]:hover {
+    border-color: var(--cardiovascular-color);
+}
+
+.model-card[data-model="breast-cancer"]:hover {
+    border-color: var(--breast-cancer-color);
+}
+
+.model-card[data-model="fetal-health"]:hover {
+    border-color: var(--fetal-health-color);
+}
+
+.card-icon {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.card-icon i {
+    font-size: 3rem;
+    color: var(--secondary-color);
+    transition: var(--transition-normal);
+}
+
+.model-card[data-model="cardiovascular"] .card-icon i {
+    color: var(--cardiovascular-color);
+}
+
+.model-card[data-model="breast-cancer"] .card-icon i {
+    color: var(--breast-cancer-color);
+}
+
+.model-card[data-model="fetal-health"] .card-icon i {
+    color: var(--fetal-health-color);
+}
+
+.model-card h3 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-xl);
+}
+
+.model-card p {
+    color: var(--dark-color);
+    opacity: 0.8;
+    margin-bottom: var(--spacing-lg);
+}
+
+.card-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+.stat i {
+    font-size: var(--font-size-base);
+}
+
+/* Prediction Sections */
+.prediction-section {
+    display: none;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.prediction-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+    padding: var(--spacing-xl);
+    background: var(--white-color);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-md);
+}
+
+.section-header h2 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-md);
+}
+
+.section-header p {
+    color: var(--dark-color);
+    opacity: 0.8;
+    font-size: var(--font-size-lg);
+    margin: 0;
+}
+
+/* Form Styles */
+.form-container {
+    background: var(--white-color);
+    border-radius: var(--border-radius-xl);
+    padding: var(--spacing-2xl);
+    box-shadow: var(--shadow-lg);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.prediction-form {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+}
+
+.form-group label i {
+    color: var(--secondary-color);
+    width: 16px;
+    text-align: center;
+}
+
+.form-group input,
+.form-group select {
+    padding: var(--spacing-md);
+    border: 2px solid var(--light-color);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-base);
+    transition: var(--transition-normal);
+    background-color: var(--white-color);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.form-group input:invalid,
+.form-group select:invalid {
+    border-color: var(--accent-color);
+}
+
+.form-group small {
+    color: var(--dark-color);
+    opacity: 0.6;
+    font-size: var(--font-size-xs);
+    margin-top: var(--spacing-xs);
+}
+
+/* Form Tabs (for Breast Cancer) */
+.form-tabs {
+    display: flex;
+    margin-bottom: var(--spacing-xl);
+    border-bottom: 2px solid var(--light-color);
+}
+
+.tab-button {
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: none;
+    border: none;
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--dark-color);
+    cursor: pointer;
+    transition: var(--transition-normal);
+    border-bottom: 3px solid transparent;
+}
+
+.tab-button.active {
+    color: var(--breast-cancer-color);
+    border-bottom-color: var(--breast-cancer-color);
+}
+
+.tab-button:hover {
+    background-color: rgba(233, 30, 99, 0.1);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.tab-content h3 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-lg);
+    font-size: var(--font-size-xl);
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: var(--spacing-lg);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Button Styles */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-xl);
+    border: none;
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--transition-normal);
+    box-shadow: var(--shadow-sm);
+    min-width: 140px;
+    justify-content: center;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--secondary-color), var(--info-color));
+    color: var(--white-color);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--info-color), var(--secondary-color));
+}
+
+.btn-secondary {
+    background: var(--light-color);
+    color: var(--dark-color);
+    border: 2px solid var(--dark-color);
+}
+
+.btn-secondary:hover {
+    background: var(--dark-color);
+    color: var(--white-color);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--success-color), #2ecc71);
+    color: var(--white-color);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, var(--warning-color), #f1c40f);
+    color: var(--white-color);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--accent-color), #c0392b);
+    color: var(--white-color);
+}
+
+/* Results Section */
+.results-section {
+    background: var(--white-color);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-xl);
+    padding: var(--spacing-2xl);
+    margin-top: var(--spacing-2xl);
+    border: 3px solid var(--success-color);
+    animation: slideUp 0.5s ease-in-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 2px solid var(--light-color);
+}
+
+.results-header h2 {
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.result-summary {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+    padding: var(--spacing-xl);
+    background: linear-gradient(135deg, var(--light-color), #f8f9fa);
+    border-radius: var(--border-radius-lg);
+}
+
+.prediction-badge {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-xl);
+    margin-bottom: var(--spacing-lg);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.prediction-badge.low-risk {
+    background: linear-gradient(135deg, var(--success-color), #2ecc71);
+    color: var(--white-color);
+}
+
+.prediction-badge.moderate-risk {
+    background: linear-gradient(135deg, var(--warning-color), #f1c40f);
+    color: var(--white-color);
+}
+
+.prediction-badge.high-risk {
+    background: linear-gradient(135deg, var(--accent-color), #c0392b);
+    color: var(--white-color);
+}
+
+.prediction-badge.normal {
+    background: linear-gradient(135deg, var(--success-color), #2ecc71);
+    color: var(--white-color);
+}
+
+.prediction-badge.suspect {
+    background: linear-gradient(135deg, var(--warning-color), #f1c40f);
+    color: var(--white-color);
+}
+
+.prediction-badge.pathological {
+    background: linear-gradient(135deg, var(--accent-color), #c0392b);
+    color: var(--white-color);
+}
+
+.prediction-badge.benign {
+    background: linear-gradient(135deg, var(--success-color), #2ecc71);
+    color: var(--white-color);
+}
+
+.prediction-badge.malignant {
+    background: linear-gradient(135deg, var(--accent-color), #c0392b);
+    color: var(--white-color);
+}
+
+.confidence-score {
+    font-size: var(--font-size-xl);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.confidence-score span:last-child {
+    color: var(--secondary-color);
+}
+
+/* Result Details */
+.result-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.detail-card {
+    background: linear-gradient(135deg, #f8f9fa, var(--light-color));
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-md);
+    border-left: 4px solid var(--secondary-color);
+}
+
+.detail-card h3 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.detail-card h3 i {
+    color: var(--secondary-color);
+}
+
+.detail-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.detail-card li {
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid rgba(52, 73, 94, 0.1);
+    position: relative;
+    padding-left: var(--spacing-lg);
+}
+
+.detail-card li:before {
+    content: '•';
+    color: var(--secondary-color);
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.detail-card li:last-child {
+    border-bottom: none;
+}
+
+/* Result Visualization */
+.result-visualization {
+    background: #f8f9fa;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xl);
+    text-align: center;
+}
+
+#results-chart {
+    max-width: 100%;
+    height: 300px;
+}
+
+/* Footer */
+.footer {
+    background: var(--primary-color);
+    color: var(--white-color);
+    padding: var(--spacing-xl);
+    margin-top: auto;
+    text-align: center;
+}
+
+.footer-content p {
+    margin-bottom: var(--spacing-sm);
+    opacity: 0.8;
+}
+
+.footer-content p:last-child {
+    margin-bottom: 0;
+    font-size: var(--font-size-sm);
+    color: var(--warning-color);
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(44, 62, 80, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    text-align: center;
+    color: var(--white-color);
+}
+
+.loading-spinner i {
+    font-size: 4rem;
+    margin-bottom: var(--spacing-lg);
+    color: var(--secondary-color);
+}
+
+.loading-spinner p {
+    font-size: var(--font-size-lg);
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header {
+        padding: var(--spacing-md);
+    }
+    
+    .logo {
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .nav {
+        gap: var(--spacing-sm);
+    }
+    
+    .nav-link {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-sm);
+    }
+    
+    .main-content {
+        padding: var(--spacing-lg);
+    }
+    
+    .model-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    .form-container {
+        padding: var(--spacing-lg);
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .result-details {
+        grid-template-columns: 1fr;
+    }
+    
+    .results-header {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        text-align: center;
+    }
+    
+    .form-tabs {
+        flex-direction: column;
+    }
+    
+    .tab-button {
+        border-bottom: none;
+        border-left: 3px solid transparent;
+    }
+    
+    .tab-button.active {
+        border-left-color: var(--breast-cancer-color);
+        border-bottom-color: transparent;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: var(--spacing-sm);
+    }
+    
+    .logo h1 {
+        font-size: var(--font-size-2xl);
+    }
+    
+    .main-content {
+        padding: var(--spacing-md);
+    }
+    
+    .prediction-badge {
+        font-size: var(--font-size-lg);
+        padding: var(--spacing-md);
+    }
+    
+    .confidence-score {
+        font-size: var(--font-size-base);
+    }
+}
+
+/* Accessibility Improvements */
+.btn:focus,
+.nav-link:focus,
+input:focus,
+select:focus {
+    outline: 2px solid var(--secondary-color);
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --primary-color: #000000;
+        --secondary-color: #0066cc;
+        --light-color: #ffffff;
+        --dark-color: #000000;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .logo i {
+        animation: none;
+    }
+}
+
+/* Print styles */
+@media print {
+    .header,
+    .footer,
+    .nav,
+    .form-actions,
+    .loading-overlay {
+        display: none;
+    }
+    
+    .main-content {
+        padding: 0;
+    }
+    
+    .prediction-section {
+        display: block !important;
+    }
+    
+    .results-section {
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--light-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--secondary-color);
+    border-radius: var(--border-radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}
