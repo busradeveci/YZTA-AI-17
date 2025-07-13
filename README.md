@@ -1,8 +1,38 @@
-# YZTA AI 17 - Disease Prediction Project
+# MediRisk
 
-## 🔍 Project Overview
+## Takım İsmi
+**MedOps Takımı**
 
-This project develops a machine learning model to predict cardiovascular disease risk based on patient medical data. The system provides a web-based interface for healthcare professionals to input patient information and receive risk assessments.
+## Takım Üyeleri
+- [Feyzanur İnan](https://github.com/feyzann) - Scrum Master
+- [Büşra Deveci](https://github.com/busradeveci) - Product Owner
+- [Eren Cice](https://github.com/erencice) - Developer
+- [Rabia Yaşa](https://github.com/rabiayasa4) - Developer
+- [Onur Kayabaş](https://github.com/Onurkayabas1) - Developer
+
+## Ürün İsmi
+**MediRisk Web Uygulaması**  
+> (Sağlık risklerini daha oluşmadan önce tahmin edin)
+
+## Product Backlog URL
+MedOps Trello Backlog Board  
+- Backlog, sprint raporlarındaki ekran görüntüleriyle belgelendi.
+
+## Ürün Açıklaması
+MediRisk uygulaması; kronik böbrek hastalığı, fetal sağlık, meme kanseri ve depresyon gibi çeşitli sağlık durumları için farklı veri setlerini kullanarak, kullanıcıların kendi sağlık risklerini değerlendirmelerine olanak tanıyan bir web platformudur.  
+Kullanıcılar sağlık verilerini girerek, eğitilmiş makine öğrenmesi modelleri aracılığıyla risk skorlarını öğrenirler.
+
+## Ürün Özellikleri
+- Çoklu sağlık veri setleri (Chronic Kidney Disease, Fetal Health, Breast Cancer, Student Depression)
+- ML tabanlı risk tahmin modelleri
+- Kullanıcı dostu arayüz
+- Risk skorlarını grafiklerle görselleştirme
+- Güvenli oturum yönetimi ve kullanıcı doğrulama
+
+## Hedef Kitle
+- Sağlık durumu hakkında ön değerlendirme yapmak isteyen kullanıcılar
+- Kronik hastalık riski bulunan bireyler
+- Sağlık analitiği uygulamalarına ilgi duyanlar
 
 ## 📊 Datasets
 
@@ -80,6 +110,10 @@ YZTA-AI-17/
 │   └── cardiovascular_model.pkl      # Trained cardiovascular model
 ├── config.py                   # Configuration settings
 ├── requirements.txt            # Python dependencies
+├── run.py                      # Main application runner
+├── start.sh                    # Linux/macOS startup script
+├── start.bat                   # Windows startup script
+├── DEPLOYMENT.md               # Cross-platform deployment guide
 └── README.md                   # Project documentation
 ```
 
@@ -152,107 +186,194 @@ python run.py --port 8080
 ### 📱 Çapraz Platform Dağıtım
 Detaylı kurulum ve farklı bilgisayarlarda çalıştırma talimatları için [DEPLOYMENT.md](DEPLOYMENT.md) dosyasına bakın.
 
-## 🔧 Usage
+## 🔧 Kullanım
 
-1. **Web Interface**: Access the web application to input patient data and receive cardiovascular risk predictions
-2. **API Endpoints**: Use the REST API for programmatic access to the prediction model
-3. **Jupyter Notebooks**: Explore the data analysis and model development process in the `notebooks/` directory
+1. **Web Arayüzü**: Hasta verilerini girmek ve kardiyovasküler risk tahminleri almak için web uygulamasına erişin
+2. **API Uç Noktaları**: Tahmin modeline programatik erişim için REST API'yi kullanın
+3. **Jupyter Notebook'ları**: `notebooks/` dizinindeki veri analizi ve model geliştirme sürecini keşfedin
 
-## 🧠 Model Information
+## 🧠 Model Bilgileri
 
-The project includes three specialized machine learning models for different medical prediction tasks:
+Proje, farklı tıbbi tahmin görevleri için üç özelleşmiş makine öğrenmesi modeli içerir:
 
-### 🫀 Cardiovascular Disease Model
-The cardiovascular disease prediction model analyzes patient medical data to predict the likelihood of heart disease. Key factors include:
-- Demographics (age, gender)
-- Clinical measurements (blood pressure, cholesterol, heart rate)
-- Cardiac test results (ECG, exercise stress test)
-- Symptom indicators (chest pain, exercise angina)
+### 🫀 Kardiyovasküler Hastalık Modeli
+- **Algoritma**: Random Forest Classifier
+- **Özellikler**: 13 klinik parametre
+- **Doğruluk**: ~85%
+- **Kullanım**: Kardiyovasküler hastalık riski tahmini
 
-### 🎗️ Breast Cancer Model
-The breast cancer diagnosis model uses morphometric measurements of cell nuclei to classify tumors as benign or malignant. Features include:
-- Cell nucleus measurements (radius, texture, perimeter, area)
-- Shape characteristics (smoothness, compactness, concavity)
-- Statistical measures (mean, standard error, worst values)
+### 🎗️ Meme Kanseri Modeli
+- **Algoritma**: Support Vector Machine (SVM)
+- **Özellikler**: 30 morfometrik ölçüm
+- **Doğruluk**: ~95%
+- **Kullanım**: Malign/benign tümör sınıflandırması
 
-### 👶 Fetal Health Model
-The fetal health classification model analyzes cardiotocography (CTG) data to assess fetal well-being during pregnancy:
-- Fetal heart rate patterns (baseline, variability, accelerations)
-- Uterine contraction monitoring
-- Deceleration patterns (light, severe, prolonged)
-- Statistical histogram features of heart rate data
+### 👶 Fetal Sağlık Modeli
+- **Algoritma**: Gradient Boosting Classifier
+- **Özellikler**: 21 CTG parametresi
+- **Doğruluk**: ~92%
+- **Kullanım**: Normal/şüpheli/patolojik fetal durum sınıflandırması
 
-## 📈 Performance Metrics
+## 🛠️ Teknik Detaylar
 
-The model's performance is evaluated using standard classification metrics:
-- Accuracy
-- Precision
-- Recall
-- F1-Score
-- ROC-AUC
-
-## 🛠️ Technology Stack
-
-- **Backend**: Flask (Python web framework)
+### Teknoloji Yığını
+- **Backend**: Flask (Python 3.8+)
 - **Machine Learning**: scikit-learn, pandas, numpy
-- **Frontend**: HTML, CSS, JavaScript
-- **Data Processing**: pandas, numpy
-- **Model Serialization**: pickle
-- **Development**: Jupyter Notebooks
+- **Frontend**: HTML5, CSS3, JavaScript
+- **Visualization**: Chart.js
+- **Database**: SQLite (geliştirme), PostgreSQL (üretim)
 
-## 📝 API Documentation
+### API Endpoints
 
-### Prediction Endpoint
-
-```
-POST /predict
+#### Cardiovascular Prediction
+```bash
+POST /api/predict/cardiovascular
 Content-Type: application/json
 
 {
-  "age": 45,
-  "gender": 1,
-  "chestpain": 2,
-  "restingBP": 130,
-  "serumcholestrol": 240,
-  "fastingbloodsugar": 0,
-  "restingrelectro": 1,
-  "maxheartrate": 150,
-  "exerciseangia": 0,
-  "oldpeak": 2.5,
-  "slope": 2,
-  "noofmajorvessels": 1
+  "age": 50,
+  "sex": 1,
+  "cp": 2,
+  "trestbps": 120,
+  "chol": 200,
+  "fbs": 0,
+  "restecg": 0,
+  "thalach": 150,
+  "exang": 0,
+  "oldpeak": 1.0,
+  "slope": 1,
+  "ca": 0,
+  "thal": 2
 }
 ```
 
-Response:
-```json
+#### Breast Cancer Prediction
+```bash
+POST /api/predict/breast_cancer
+Content-Type: application/json
+
 {
-  "prediction": 1,
-  "probability": 0.85,
-  "risk_level": "High"
+  "mean_radius": 14.0,
+  "mean_texture": 19.0,
+  // ... other 28 features
 }
 ```
 
-## 📊 Data Analysis
+#### Fetal Health Prediction
+```bash
+POST /api/predict/fetal_health
+Content-Type: application/json
 
-The project includes comprehensive data analysis in Jupyter notebooks:
-- Exploratory Data Analysis (EDA)
-- Feature correlation analysis
-- Model performance evaluation
-- Data visualization
+{
+  "baseline_value": 120,
+  "accelerations": 0.5,
+  "fetal_movement": 0.3,
+  // ... other 18 features
+}
+```
 
-## 🤝 Contributing
+## 📊 Performans Metrikleri
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+### Model Değerlendirme
+- Doğruluk (Accuracy)
+- Hassasiyet (Precision)
+- Geri çağırma (Recall)
+- F1 Skoru
+- ROC-AUC Skoru
 
-## 🏥 Disclaimer
+### Analiz Özellikleri
+- Özellik korelasyon analizi
+- Model performans değerlendirmesi
+- Veri görselleştirme
 
-This tool is for educational and research purposes only. It should not be used as a substitute for professional medical advice, diagnosis, or treatment. Always consult with qualified healthcare professionals for medical decisions.
+## 🤝 Katkıda Bulunma
+
+1. Repository'yi fork edin
+2. Feature branch oluşturun (`git checkout -b feature/AmazingFeature`)
+3. Değişikliklerinizi commit edin (`git commit -m 'Add some AmazingFeature'`)
+4. Branch'inizi push edin (`git push origin feature/AmazingFeature`)
+5. Pull Request açın
+
+## 🏥 Yasal Uyarı
+
+Bu araç yalnızca eğitim ve araştırma amaçlıdır. Profesyonel tıbbi tavsiye, tanı veya tedavinin yerine geçmez. Tıbbi kararlar için her zaman nitelikli sağlık uzmanlarına danışın.
+
+<details>
+<summary> <h3> SPRINT 1 </h3> </summary>
+
+- **Sprint Süresi:** 20 Haziran – 6 Temmuz
+- **Planlanan Kapasite:** ~100 iş puanı
+- **Planlama mantığı:** Toplamda yaklaşık 340 iş puanı olarak tahmin edilen proje iş yükü, sprint'lere bölündü. İlk sprint'te %30'luk bir iş yükü hedeflenerek temel veri işleme akışları ve web altyapısı oluşturulmak istendi.
 
 ---
 
-**Project developed as part of YZTA AI 17 initiative**
+### Tamamlanan Çalışmalar
+- **Veri Setlerinin Toplanması ve İncelenmesi**
+  - Chronic Kidney Disease, Fetal Health, Breast Cancer ve Student Depression veri setleri projeye dahil edildi.
+  - İlk veri keşif çalışmaları (EDA) yapıldı, eksik veriler, değişken tipleri ve dağılımlar incelendi.
+
+- **Flask Web Altyapısı**
+  - Temel Flask uygulaması kuruldu.
+  - Routes ve template yapısı oluşturuldu.
+  - Bootstrap ile responsive tasarım entegre edildi.
+
+- **Makine Öğrenmesi Model Geliştirme**
+  - Her veri seti için temel classification algoritmaları (Random Forest, SVM, Logistic Regression) test edildi.
+  - Cross-validation ile model performansları karşılaştırıldı.
+  - En başarılı modeller seçildi ve pkl formatında kaydedildi.
+
+### Sprint Review
+- **Tamamlanan İş Puanı:** 95/100
+- **Sprint Hedefi:** Başarıyla tamamlandı
+- **Demo:** Web uygulaması temel tahmin fonksiyonları ile çalışır durumda
+
+### Sprint Retrospective
+**İyi Gidenler:**
+- Takım iletişimi etkili oldu
+- Veri analizi süreçleri verimli tamamlandı
+- Flask altyapısı planlanan şekilde kuruldu
+
+**Geliştirilecekler:**
+- Model accuracy'lerinin artırılması gerekiyor
+- UI/UX tasarımının iyileştirilmesi
+- Test coverage'ının artırılması
+
+**Öğrenilen Dersler:**
+- Veri temizleme işlemlerinin model performansına büyük etkisi var
+- Cross-validation önemli, overfitting'i önlüyor
+- Erken prototipleme kullanıcı feedback'i için çok değerli
+
+---
+
+**Sprint 1 Ekran Görüntüleri:**
+
+### App Screenshots
+- [Ana Sayfa](sprintOne/app_ss/01.png)
+- [Veri Girişi](sprintOne/app_ss/02.png)
+- [Tahmin Sonuçları](sprintOne/app_ss/03.png)
+
+### Trello Board Screenshots
+- [Product Backlog](sprintOne/trello_ss/01.png)
+- [Sprint Planning](sprintOne/trello_ss/02.png)
+- [Sprint Progress](sprintOne/trello_ss/03.png)
+
+### Wireframe Screenshots
+- [Ana Sayfa Wireframe](sprintOne/wp_ss/01.png)
+- [Form Sayfası Wireframe](sprintOne/wp_ss/02.png)
+- [Sonuç Sayfası Wireframe](sprintOne/wp_ss/03.png)
+
+</details>
+
+---
+
+## 📝 Lisans
+
+Bu proje MIT lisansı altında lisanslanmıştır. Daha fazla bilgi için [LICENSE](LICENSE) dosyasına bakın.
+
+## 📞 İletişim
+
+Proje bağlantısı: [https://github.com/erencice/YZTA-AI-17](https://github.com/erencice/YZTA-AI-17)
+
+---
+
+**Son Güncelleme:** Temmuz 2025
