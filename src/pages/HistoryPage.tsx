@@ -113,7 +113,7 @@ const HistoryPage: React.FC = () => {
           </Typography>
           <Button
             variant="contained"
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/dashboard')}
           >
             Yeni Test
           </Button>
