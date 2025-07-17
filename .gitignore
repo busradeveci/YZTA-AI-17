@@ -1,121 +1,42 @@
-# YZTA-AI-17 Medical Prediction System - Git Ignore
+# Bağımlılıklar
+package-lock.json
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
 
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+# Next.js derleme çıktıları
+/.next/
+/out/
 
-# Virtual Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-.python-version
+# Üretim yapıları
+/build
 
-# Jupyter Notebooks
-.ipynb_checkpoints
-*.ipynb_checkpoints/
+# Test raporları ve önbellekleri
+/coverage
+.jest/cache
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+# Ortam değişkenleri - Asla hassas bilgileri repoya göndermeyin!
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# OS
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Flask
-instance/
-.webassets-cache
-
-# Testing
-.coverage
-.pytest_cache/
-.tox/
-.nox/
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-
-# Model files (optional - uncomment if models are large)
-# *.pkl
-# *.joblib
-# *.h5
-# *.pb
-
-# Data files (optional - uncomment if data is sensitive)
-# *.csv
-# *.json
-# *.xlsx
-
-# Logs
-*.log
-logs/
-
-# Temporary files
-*.tmp
-*.temp
-.cache/
-
-# Configuration (if contains secrets)
-# config.py
-# .env
-
-# Documentation builds
-docs/_build/
-
-# Backup files
-*.bak
-*.backup
-
-# Database
-*.db
-*.sqlite3
-
-# Node modules (if any frontend dependencies)
-node_modules/
+# Hata ayıklama logları
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 
-# Media files (if large)
-# *.mp4
-# *.avi
-# *.mov
+# Editör ve işletim sistemi dosyaları
+.DS_Store
+*.pem
+.vscode/
+Thumbs.db
 
-# Archives
-*.zip
-*.tar.gz
-*.rar
+# Vercel dağıtım dosyaları
+.vercel
+
+# TypeScript derleme bilgileri
+*.tsbuildinfo
+next-env.d.ts

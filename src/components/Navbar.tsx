@@ -1,66 +1,186 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AppBar,
   Toolbar,
   Typography,
   Button,
   Box,
-  Container
+  Avatar,
+  Menu,
+  MenuItem,
+  IconButton,
+  Divider
 } from '@mui/material';
-import { HealthAndSafety, History, Info } from '@mui/icons-material';
+import {
+  Dashboard,
+  History,
+  Person,
+  Logout,
+  Assessment
+} from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [user, setUser] = useState<any>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const navItems = [
-    { label: 'Ana Sayfa', path: '/', icon: <HealthAndSafety /> },
-    { label: 'Geçmiş Testler', path: '/history', icon: <History /> },
-    { label: 'Hakkında', path: '/about', icon: <Info /> }
-  ];
+  useEffect(() => {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    navigate('/login');
+  };
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    handleMenuClose();
+  };
+
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
+
+  if (!user) {
+    return null;
+  }
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#1976d2' }}>
-      <Container maxWidth="lg">
-        <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{
-              flexGrow: 1,
-              fontWeight: 700,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1
-            }}
-            onClick={() => navigate('/')}
-          >
-            <HealthAndSafety />
-            Sağlık Tarama
+    <AppBar position="sticky" elevation={2}>
+      <Toolbar>
+        {/* Logo ve Başlık */}
+        <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: 700, mr: 2 }}>
+            🏥 MediRisk
           </Typography>
           
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            {navItems.map((item) => (
-              <Button
-                key={item.path}
-                color="inherit"
-                startIcon={item.icon}
-                onClick={() => navigate(item.path)}
-                sx={{
-                  backgroundColor: location.pathname === item.path ? 'rgba(255,255,255,0.1)' : 'transparent',
-                  '&:hover': {
-                    backgroundColor: 'rgba(255,255,255,0.1)'
-                  }
-                }}
-              >
-                {item.label}
-              </Button>
-            ))}
+          {/* Navigasyon Menüsü */}
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, ml: 4 }}>
+            <Button
+              color="inherit"
+              startIcon={<Dashboard />}
+              onClick={() => navigate('/dashboard')}
+              sx={{
+                mx: 1,
+                bgcolor: isActive('/dashboard') ? 'rgba(255,255,255,0.1)' : 'transparent',
+                '&:hover': {
+                  bgcolor: 'rgba(255,255,255,0.1)'
+                }
+              }}
+            >
+              Dashboard
+            </Button>
+            <Button
+              color="inherit"
+              startIcon={<History />}
+              onClick={() => navigate('/history')}
+              sx={{
+                mx: 1,
+                bgcolor: isActive('/history') ? 'rgba(255,255,255,0.1)' : 'transparent',
+                '&:hover': {
+                  bgcolor: 'rgba(255,255,255,0.1)'
+                }
+              }}
+            >
+              Geçmiş
+            </Button>
+            <Button
+              color="inherit"
+              startIcon={<Assessment />}
+              onClick={() => navigate('/about')}
+              sx={{
+                mx: 1,
+                bgcolor: isActive('/about') ? 'rgba(255,255,255,0.1)' : 'transparent',
+                '&:hover': {
+                  bgcolor: 'rgba(255,255,255,0.1)'
+                }
+              }}
+            >
+              Hakkında
+            </Button>
           </Box>
-        </Toolbar>
-      </Container>
+        </Box>
+
+        {/* Kullanıcı Menüsü */}
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography variant="body2" sx={{ mr: 2, display: { xs: 'none', sm: 'block' } }}>
+            {user.name}
+          </Typography>
+          
+          <IconButton
+            onClick={handleMenuOpen}
+            sx={{ color: 'white' }}
+          >
+            <Avatar sx={{ width: 32, height: 32, bgcolor: 'rgba(255,255,255,0.2)' }}>
+              <Person />
+            </Avatar>
+          </IconButton>
+          
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+            PaperProps={{
+              sx: {
+                mt: 1,
+                minWidth: 200,
+                '& .MuiMenuItem-root': {
+                  py: 1.5,
+                  px: 2
+                }
+              }
+            }}
+          >
+            <MenuItem onClick={handleMenuClose}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Avatar sx={{ width: 32, height: 32, mr: 2, bgcolor: 'primary.main' }}>
+                  <Person />
+                </Avatar>
+                <Box>
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                    {user.name}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Hasta
+                  </Typography>
+                </Box>
+              </Box>
+            </MenuItem>
+            <Divider />
+            <MenuItem onClick={() => handleNavigation('/dashboard')}>
+              <Dashboard sx={{ mr: 2 }} />
+              Dashboard
+            </MenuItem>
+            <MenuItem onClick={() => handleNavigation('/history')}>
+              <History sx={{ mr: 2 }} />
+              Test Geçmişi
+            </MenuItem>
+            <MenuItem onClick={() => handleNavigation('/about')}>
+              <Assessment sx={{ mr: 2 }} />
+              Hakkında
+            </MenuItem>
+            <Divider />
+            <MenuItem onClick={handleLogout} sx={{ color: 'error.main' }}>
+              <Logout sx={{ mr: 2 }} />
+              Çıkış Yap
+            </MenuItem>
+          </Menu>
+        </Box>
+      </Toolbar>
     </AppBar>
   );
 };
