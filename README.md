@@ -168,40 +168,37 @@ Sprint 3’te ise kalan yaklaşık 130 iş puanlık iş planlanmaktadır. Bu spr
 - **Component Types:** Tüm React bileşenleri TypeScript ile yazıldı
 - **API Types:** API response ve request tipleri tanımlandı
 
-
 ## Proje Dosya Yapısı
 
-Projede backend ve frontend kodları ayrı klasörlerde organize edilmiştir. Ayrıca konfigürasyon, test ve dokümantasyon dosyaları da belirli klasörlerde toplanmıştır.
+Proje, backend ve frontend kodlarının ayrı klasörlerde organize edildiği; ayrıca testler, dokümantasyon ve yardımcı scriptlerin kendi dizinlerinde toplandığı temiz ve anlaşılır bir yapıya sahiptir.
 
-## MediRisk/
-│
-├── backend/ # FastAPI backend uygulaması
-│ ├── main.py # Uygulama giriş noktası ve API endpointleri
-│ ├── api/ # API route ve controller dosyaları
-│ ├── models/ # Veri tabanı modelleri ve şemalar
-│ ├── services/ # İş mantığı ve servis fonksiyonları
-│ ├── utils/ # Yardımcı fonksiyonlar ve araçlar
-│ ├── tests/ # Backend testleri
-│ └── requirements.txt # Backend bağımlılıkları
-│
-├── src/ # Frontend React uygulaması
-│ ├── components/ # Tekrar kullanılabilir React bileşenleri
-│ ├── pages/ # Uygulama sayfa bileşenleri
-│ ├── utils/ # API çağrıları ve yardımcı fonksiyonlar
-│ ├── types/ # TypeScript tip tanımları
-│ ├── hooks/ # Özel React hook'ları
-│ ├── assets/ # Görseller ve statik dosyalar
-│ ├── styles/ # CSS / SASS dosyaları
-│ ├── tests/ # Frontend testleri
-│ └── package.json # Frontend bağımlılıkları ve scriptler
-│
-├── docs/ # Proje dokümantasyon dosyaları
-│
-├── scripts/ # Kurulum, dağıtım ve yardımcı scriptler
-│
-├── .gitignore # Git ignore ayarları
-├── README.md # Proje dokümantasyonu (bu dosya)
-└── LICENSE # Lisans dosyası
+# MediRisk/  
+├── **backend/** — FastAPI backend uygulaması  
+│   ├── main.py — Uygulama giriş noktası ve API tanımları  
+│   ├── api/ — Route yönetimi ve controller dosyaları  
+│   ├── models/ — Veri tabanı modelleri ve şemalar  
+│   ├── services/ — İş mantığı ve servis katmanları  
+│   ├── utils/ — Yardımcı fonksiyonlar ve araçlar  
+│   ├── tests/ — Backend testleri  
+│   └── requirements.txt — Backend bağımlılıkları  
+
+├── **src/** — React frontend uygulaması  
+│   ├── components/ — Tekrar kullanılabilir React bileşenleri  
+│   ├── pages/ — Sayfa bileşenleri  
+│   ├── hooks/ — Özel React hook’ları  
+│   ├── utils/ — API çağrıları ve yardımcı fonksiyonlar  
+│   ├── types/ — TypeScript tip tanımları  
+│   ├── assets/ — Statik dosyalar (resimler, fontlar vs.)  
+│   ├── styles/ — CSS / SASS dosyaları  
+│   ├── tests/ — Frontend testleri  
+│   └── package.json — Frontend bağımlılıkları ve scriptler  
+
+├── **docs/** — Proje dokümantasyon dosyaları  
+├── **scripts/** — Kurulum, dağıtım ve yardımcı scriptler  
+├── .gitignore — Git yoksayılan dosyalar  
+├── README.md — Proje dokümantasyonu (bu dosya)  
+└── LICENSE — Lisans bilgileri  
+
 
 ### Teknik Detaylar
 
