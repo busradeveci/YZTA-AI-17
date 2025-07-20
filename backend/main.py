@@ -50,6 +50,8 @@ class TestHistory(BaseModel):
     form_data: Dict[str, Any]
 
 class ModelUploadResponse(BaseModel):
+    model_config = {"protected_namespaces": ()}
+    
     message: str
     model_name: str
     model_type: str
