@@ -108,16 +108,28 @@ Kullanıcılar sağlık verilerini girerek, eğitilmiş makine öğrenmesi model
 
 <details>
 <summary> <h3> SPRINT 2 NOTLARI </h3> </summary>
+## Sprint 2 Puanlama Sistemi
 
-- **Sprint Süresi:** 7 Temmuz – 20 Temmuz 2024
-- **Planlanan Kapasite:** ~120 iş puanı
-- **Tamamlanan İş Puanı:** ~110 iş puanı
-- **Başarı Oranı:** %92
+**Sprint Süresi:** 7 Temmuz – 20 Temmuz 2024  
+**Planlanan Kapasite:** ~120 iş puanı  
+**Gerçekleşen Puan:** ~110 iş puanı  
+**Başarı Oranı:** %92
 
----
+### Puanlama Mantığı
+
+Toplam proje iş yükü yaklaşık 340 iş puanı olarak planlanmıştır.  
+Sprint 1'de toplam iş yükünün %30'una denk gelen yaklaşık 100 iş puanı tamamlanmıştır.  
+
+Sprint 2'nin öncelikli hedefleri altyapının kurulması, temel API bağlantılarının sağlanması ve kullanıcı arayüzünün şekillendirilmesidir. Bu kapsamda 120 iş puanı hedeflenmiş, 110 iş puanı başarıyla tamamlanmıştır.  
+
+Sprint 3’te ise kalan yaklaşık 130 iş puanlık iş planlanmaktadır. Bu sprintte veritabanı entegrasyonu, üretim ortamına geçiş ve yapay zeka destekli chatbot geliştirme işleri ön planda olacaktır.
 
 ### Tamamlanan Çalışmalar
 
+- Backend-Frontend Entegrasyonu (%100 Tamamlandı)  
+- API Servis Katmanı: src/utils/api.ts ile kapsamlı API katmanı oluşturuldu  
+- FastAPI Backend: backend/main.py ile modern FastAPI backend aktif hale getirildi  
+  
 #### Backend-Frontend Entegrasyonu (%100 Tamamlandı)
 - **API Servis Katmanı:** `src/utils/api.ts` ile kapsamlı API katmanı oluşturuldu
 - **FastAPI Backend:** `backend/main.py` ile modern FastAPI backend aktif hale getirildi
