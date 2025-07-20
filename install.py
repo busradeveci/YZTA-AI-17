@@ -69,7 +69,6 @@ def main():
         basic_packages = [
             "wheel",
             "setuptools",
-            "Flask==2.3.3",
             "numpy==1.24.3",
             "pandas==2.0.3"
         ]
@@ -104,7 +103,6 @@ def main():
     print("🧪 Kurulum test ediliyor...")
     
     test_imports = [
-        ("flask", "Flask"),
         ("pandas", "pandas"),
         ("numpy", "numpy"),
         ("sklearn", "scikit-learn"),

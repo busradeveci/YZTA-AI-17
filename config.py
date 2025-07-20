@@ -1,9 +1,10 @@
 """
-YZTA-AI-17 Tıbbi Tahmin Sistemi için Yapılandırma Ayarları
+MediRisk Tıbbi Tahmin Sistemi için Yapılandırma Ayarları
 ==============================================================
 
 Bu modül kardiyovasküler hastalık, meme kanseri ve fetal sağlık tahminlerini
 içeren çok alanli tıbbi tahmin sistemi için yapılandırma ayarlarını içerir.
+FastAPI backend için optimize edilmiştir.
 """
 
 import os
@@ -15,7 +16,7 @@ BASE_DIR = Path(__file__).parent.absolute()
 # Model configurations
 MODEL_CONFIGS = {
     'cardiovascular': {
-        'model_path': BASE_DIR / 'app' / 'model' / 'model_cad' / 'cardiovascular_model.pkl',
+        'model_path': BASE_DIR / 'model' / 'model_cardiovascular' / 'cardiovascular_model.pkl',
         'data_path': BASE_DIR / 'data' / 'Cardiovascular_Disease_Dataset.csv',
         'model_type': 'binary_classification',
         'target_classes': ['Sağlıklı', 'Kardiyovasküler Hastalık'],
@@ -23,29 +24,28 @@ MODEL_CONFIGS = {
         'api_endpoint': '/api/predict/cardiovascular'
     },
     'breast_cancer': {
-        'model_path': BASE_DIR / 'app' / 'model' / 'model_breast' / 'breast_cancer_model.pkl',
-        'data_path': BASE_DIR / 'data' / 'breast_cancer' / 'breast_cancer_dataset.csv',
+        'model_path': BASE_DIR / 'model' / 'model_breast' / 'breast_cancer_model.pkl',
+        'data_path': BASE_DIR / 'data' / 'Breast_Cancer.csv',
         'model_type': 'binary_classification',
         'target_classes': ['Malign', 'Benign'],
         'threshold': 0.5,
         'api_endpoint': '/api/predict/breast_cancer'
     },
     'fetal_health': {
-        'model_path': BASE_DIR / 'app' / 'model' / 'model_fetal' / 'fetal_health_model.pkl',
-        'data_path': BASE_DIR / 'data' / 'fetal_health' / 'fetal_health_dataset.csv',
+        'model_path': BASE_DIR / 'model' / 'model_fetal' / 'fetal_health_model.pkl',
+        'data_path': BASE_DIR / 'data' / 'fetal_health.csv',
         'model_type': 'multiclass_classification',
         'target_classes': ['Normal', 'Şüpheli', 'Patolojik'],
         'api_endpoint': '/api/predict/fetal_health'
     }
 }
 
-# Flask configuration
+# FastAPI configuration
 class Config:
-    """Temel yapılandırma sınıfı."""
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'yzta-ai-17-medical-prediction-system'
+    """Temel yapılandırma sınıfı - FastAPI için."""
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'medirisk-medical-prediction-system'
     DEBUG = False
     TESTING = False
-    
     # Database configuration (if needed in future)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
@@ -64,8 +64,13 @@ class Config:
     RATELIMIT_STORAGE_URL = 'memory://'
     RATELIMIT_DEFAULT = "100 per hour"
     
-    # CORS settings
+    # CORS settings for FastAPI
     CORS_ORIGINS = ['http://localhost:3000', 'http://127.0.0.1:3000']
+    
+    # FastAPI specific settings
+    API_V1_STR = "/api/v1"
+    PROJECT_NAME = "MediRisk API"
+    VERSION = "1.0.0"
 
 class DevelopmentConfig(Config):
     """Development configuration."""
@@ -73,11 +78,11 @@ class DevelopmentConfig(Config):
     LOG_LEVEL = 'DEBUG'
 
 class ProductionConfig(Config):
-    """Production configuration."""
+    """Production configuration for FastAPI."""
     DEBUG = False
     LOG_LEVEL = 'WARNING'
     
-    # Security headers
+    # Security headers for production
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_HTTPONLY = True

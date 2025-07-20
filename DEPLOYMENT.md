@@ -2,13 +2,14 @@
 
 ## 🌍 Farklı Bilgisayarlarda Çalıştırma
 
-Bu sistem farklı işletim sistemlerinde ve bilgisayarlarda çalışacak şekilde tasarlanmıştır.
+Bu sistem farklı işletim sistemlerinde ve bilgisayarlarda çalışacak şekilde tasarlanmıştır. **LLM entegrasyonu ve PACE metodolojisi ile geliştirilmiş profesyonel PKL modelleri içerir.**
 
 ### 📋 Ön Gereksinimler
 - Python 3.8 veya üzeri
-- İnternet bağlantısı (ilk kurulum için)
-- En az 2GB RAM
-- 1GB boş disk alanı
+- Node.js 16+ (frontend için)
+- İnternet bağlantısı (ilk kurulum ve LLM API'leri için)
+- En az 4GB RAM (LLM işlemleri için)
+- 2GB boş disk alanı
 
 ### 🚀 Hızlı Başlangıç
 
@@ -19,7 +20,11 @@ Bu sistem farklı işletim sistemlerinde ve bilgisayarlarda çalışacak şekild
 # 3. Proje klasörüne gidin
 cd path\to\YZTA-AI-17
 
-# 4. Çalıştırın
+# 4. Environment variables ayarlayın (isteğe bağlı)
+set OPENAI_API_KEY=sk-your-key-here
+set ANTHROPIC_API_KEY=sk-ant-your-key-here
+
+# 5. Çalıştırın
 start.bat
 
 # Veya direkt:
@@ -33,7 +38,11 @@ python run.py
 # 3. Proje klasörüne gidin
 cd /path/to/YZTA-AI-17
 
-# 4. Çalıştırın
+# 4. Environment variables ayarlayın (isteğe bağlı)
+export OPENAI_API_KEY=sk-your-key-here
+export ANTHROPIC_API_KEY=sk-ant-your-key-here
+
+# 5. Çalıştırın
 ./start.sh
 
 # Veya direkt:
@@ -48,6 +57,29 @@ python run.py --install
 ```
 
 #### Manuel Kurulum:
+```bash
+# Python dependencies
+pip install -r requirements.txt
+
+# LLM dependencies (isteğe bağlı)
+pip install -r requirements_llm.txt
+
+# Frontend dependencies
+npm install
+```
+
+#### LLM API Kurulumu (AI Rapor Geliştirme için):
+```bash
+# .env dosyası oluştur
+touch .env
+
+# API anahtarlarını ekle
+echo "OPENAI_API_KEY=sk-your-openai-key" >> .env
+echo "ANTHROPIC_API_KEY=sk-ant-your-anthropic-key" >> .env
+
+# Test et
+python llm_integration_examples.py
+```
 ```bash
 # Virtual environment oluştur
 python -m venv .venv
