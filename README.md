@@ -108,6 +108,7 @@ Kullanıcılar sağlık verilerini girerek, eğitilmiş makine öğrenmesi model
 
 <details>
 <summary> <h3> SPRINT 2 NOTLARI </h3> </summary>
+
 ## Sprint 2 Puanlama Sistemi
 
 **Sprint Süresi:** 7 Temmuz – 20 Temmuz 2024  
