@@ -92,22 +92,28 @@ def show_access_urls(host, port, frontend_port=None):
     print(f"\n🌐 Sunucu Erişim Adresleri:")
     
     if frontend_port:
-        print(f"   Frontend (React): http://localhost:{frontend_port}")
-        print(f"   Backend API:     http://localhost:{port}")
+        print(f"   🎨 Frontend (React): http://localhost:{frontend_port}")
+        print(f"   🔧 Backend API:      http://localhost:{port}")
+        print(f"   📚 API Docs:         http://localhost:{port}/docs")
+        print(f"   📖 ReDoc:            http://localhost:{port}/redoc")
+        
+        # Ana kullanım için frontend URL'ini vurgula
+        print(f"\n✨ Ana Uygulama: http://localhost:{frontend_port}")
     else:
-        print(f"   Yerel: http://localhost:{port}")
-        print(f"   Yerel: http://127.0.0.1:{port}")
+        print(f"   🔧 Backend API: http://localhost:{port}")
+        print(f"   📚 API Docs:    http://localhost:{port}/docs")
+        print(f"   📖 ReDoc:       http://localhost:{port}/redoc")
     
     if host == '0.0.0.0' and not frontend_port:
         local_ip = get_local_ip()
-        print(f"   Ağ:   http://{local_ip}:{port}")
-        print(f"\n📱 QR Code için: http://{local_ip}:{port}")
-        print(f"💡 Diğer cihazlardan erişim için ağ IP'sini kullanın: {local_ip}")
+        print(f"   🌐 Network:     http://{local_ip}:{port}")
+        print(f"\n📱 Mobile Access: http://{local_ip}:{port}")
+        print(f"💡 Other devices can access via network IP: {local_ip}")
     elif host != '127.0.0.1' and not frontend_port:
-        print(f"   Ana:  http://{host}:{port}")
+        print(f"   🌐 External:    http://{host}:{port}")
     
-    print(f"\n🔗 Tarayıcınızda yukarıdaki adreslerden birini açın")
-    print("   Sunucuyu durdurmak için Ctrl+C tuşlayın\n")
+    print(f"\n🔗 Open your browser to one of the URLs above")
+    print("   Press Ctrl+C to stop the server\n")
     return True
 
 def check_frontend_dependencies():
@@ -149,26 +155,71 @@ def start_frontend():
     try:
         print("🔄 Starting React frontend...")
         
-        # Check if node_modules exists, if not run npm install
+        # Always check and install/update dependencies to ensure fresh start
         node_modules = Path(__file__).parent / "node_modules"
+        package_json = Path(__file__).parent / "package.json"
+        
+        if not package_json.exists():
+            print("❌ package.json not found!")
+            return False
+        
         if not node_modules.exists():
-            print("📦 Installing frontend dependencies...")
-            npm_install = subprocess.run(['npm', 'install'], 
-                                       cwd=Path(__file__).parent,
-                                       capture_output=True, text=True)
-            if npm_install.returncode != 0:
-                print(f"❌ npm install failed: {npm_install.stderr}")
-                return False
-            print("✅ Frontend dependencies installed")
+            print("📦 Installing frontend dependencies for the first time...")
+        else:
+            print("📦 Checking and updating frontend dependencies...")
+        
+        # Always run npm install to ensure dependencies are up to date
+        print("   Running npm install...")
+        npm_install = subprocess.run(['npm', 'install'], 
+                                   cwd=Path(__file__).parent,
+                                   capture_output=False,  # Show output to user
+                                   text=True)
+        
+        if npm_install.returncode != 0:
+            print("❌ npm install failed!")
+            print("💡 Try running manually: npm install")
+            return False
+        
+        print("✅ Frontend dependencies ready")
+        
+        # Find available port for React (default 3000, but check others if busy)
+        react_port = 3000
+        for port in range(3000, 3010):
+            if is_port_available('127.0.0.1', port):
+                react_port = port
+                break
+            elif port == 3000:
+                # Try to clean port 3000 if it's the default
+                print(f"🔄 Port {port} is busy, trying to clean it...")
+                kill_port_process(port)
+                import time
+                time.sleep(2)
+                if is_port_available('127.0.0.1', port):
+                    react_port = port
+                    break
+        
+        # Set environment variable for the port
+        env = os.environ.copy()
+        env['PORT'] = str(react_port)
+        env['BROWSER'] = 'none'  # Prevent auto-opening browser from npm start
         
         # Start React development server
-        subprocess.Popen(['npm', 'start'], 
-                        cwd=Path(__file__).parent,
-                        stdout=subprocess.DEVNULL,
-                        stderr=subprocess.DEVNULL)
+        print(f"🚀 Starting React development server on port {react_port}...")
+        frontend_process = subprocess.Popen(['npm', 'start'], 
+                                          cwd=Path(__file__).parent,
+                                          env=env,
+                                          stdout=subprocess.DEVNULL,
+                                          stderr=subprocess.DEVNULL)
         
-        print("✅ React frontend starting on http://localhost:3000")
-        return True
+        # Wait a moment and check if process is still running
+        import time
+        time.sleep(3)
+        if frontend_process.poll() is None:
+            print(f"✅ React frontend started successfully on http://localhost:{react_port}")
+            return react_port
+        else:
+            print("❌ React frontend failed to start")
+            return False
         
     except Exception as e:
         print(f"❌ Failed to start frontend: {e}")
@@ -313,13 +364,17 @@ def run_fastapi_app(host='127.0.0.1', port=8000, debug=False, auto_port=True, op
         
         # Check if Node.js and npm are available for React frontend
         frontend_available = check_frontend_dependencies()
+        frontend_port = None
         
         if frontend_available:
             # Start React frontend in a separate process
-            start_frontend()
-            frontend_port = 3000
+            frontend_port = start_frontend()
+            if not frontend_port:
+                print("⚠️  Frontend could not be started. Only backend will be available.")
+                frontend_port = None
         else:
             print("⚠️  Frontend dependencies not found. Only backend will be started.")
+            print("💡 To enable frontend, ensure Node.js and npm are installed.")
             frontend_port = None
         
         # Erişim URL'lerini göster
@@ -336,13 +391,13 @@ def run_fastapi_app(host='127.0.0.1', port=8000, debug=False, auto_port=True, op
             import uvicorn
             
             # Tarayıcıyı otomatik aç
-            if open_browser and frontend_available:
+            if open_browser and frontend_port:
                 import webbrowser
                 import threading
                 import time
                 def open_browser_delayed():
-                    time.sleep(5)  # Frontend'in başlaması için daha fazla bekle
-                    webbrowser.open(f'http://localhost:3000')
+                    time.sleep(8)  # Frontend'in tamamen başlaması için daha fazla bekle
+                    webbrowser.open(f'http://localhost:{frontend_port}')
                 
                 thread = threading.Thread(target=open_browser_delayed)
                 thread.daemon = True

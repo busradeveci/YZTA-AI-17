@@ -15,7 +15,7 @@ import {
   MenuItem
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { PersonAdd, Person } from '@mui/icons-material';
+import { PersonAdd } from '@mui/icons-material';
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();

@@ -18,7 +18,6 @@ import {
   Alert,
   CircularProgress,
   Card,
-  CardContent,
   Avatar,
   IconButton,
   List,
@@ -28,7 +27,7 @@ import {
   Collapse
 } from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
-import { healthTests, predictTestResult, mockChatMessages, chatbotResponses } from '../utils/mockData';
+import { healthTests, predictTestResult, mockChatMessages } from '../utils/mockData';
 import { TestResult, ChatMessage } from '../types';
 import { Send, SmartToy, Person, ExpandMore, ExpandLess } from '@mui/icons-material';
 

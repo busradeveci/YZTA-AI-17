@@ -109,28 +109,15 @@ Kullanıcılar sağlık verilerini girerek, eğitilmiş makine öğrenmesi model
 <details>
 <summary> <h3> SPRINT 2 NOTLARI </h3> </summary>
 
-## Sprint 2 Puanlama Sistemi
+- **Sprint Süresi:** 7 Temmuz – 20 Temmuz 2024
+- **Planlanan Kapasite:** ~120 iş puanı
+- **Tamamlanan İş Puanı:** ~110 iş puanı
+- **Başarı Oranı:** %92
 
-**Sprint Süresi:** 7 Temmuz – 20 Temmuz 2024  
-**Planlanan Kapasite:** ~120 iş puanı  
-**Gerçekleşen Puan:** ~110 iş puanı  
-**Başarı Oranı:** %92
-
-### Puanlama Mantığı
-
-Toplam proje iş yükü yaklaşık 340 iş puanı olarak planlanmıştır.  
-Sprint 1'de toplam iş yükünün %30'una denk gelen yaklaşık 100 iş puanı tamamlanmıştır.  
-
-Sprint 2'nin öncelikli hedefleri altyapının kurulması, temel API bağlantılarının sağlanması ve kullanıcı arayüzünün şekillendirilmesidir. Bu kapsamda 120 iş puanı hedeflenmiş, 110 iş puanı başarıyla tamamlanmıştır.  
-
-Sprint 3’te ise kalan yaklaşık 130 iş puanlık iş planlanmaktadır. Bu sprintte veritabanı entegrasyonu, üretim ortamına geçiş ve yapay zeka destekli chatbot geliştirme işleri ön planda olacaktır.
+---
 
 ### Tamamlanan Çalışmalar
 
-- Backend-Frontend Entegrasyonu (%100 Tamamlandı)  
-- API Servis Katmanı: src/utils/api.ts ile kapsamlı API katmanı oluşturuldu  
-- FastAPI Backend: backend/main.py ile modern FastAPI backend aktif hale getirildi  
-  
 #### Backend-Frontend Entegrasyonu (%100 Tamamlandı)
 - **API Servis Katmanı:** `src/utils/api.ts` ile kapsamlı API katmanı oluşturuldu
 - **FastAPI Backend:** `backend/main.py` ile modern FastAPI backend aktif hale getirildi
@@ -168,37 +155,24 @@ Sprint 3’te ise kalan yaklaşık 130 iş puanlık iş planlanmaktadır. Bu spr
 - **Component Types:** Tüm React bileşenleri TypeScript ile yazıldı
 - **API Types:** API response ve request tipleri tanımlandı
 
-## Proje Dosya Yapısı
+---
 
-Proje, backend ve frontend kodlarının ayrı klasörlerde organize edildiği; ayrıca testler, dokümantasyon ve yardımcı scriptlerin kendi dizinlerinde toplandığı temiz ve anlaşılır bir yapıya sahiptir.
+### Sprint 2 Görsel Belgeleri
 
-# MediRisk/  
-├── **backend/** — FastAPI backend uygulaması  
-│   ├── main.py — Uygulama giriş noktası ve API tanımları  
-│   ├── api/ — Route yönetimi ve controller dosyaları  
-│   ├── models/ — Veri tabanı modelleri ve şemalar  
-│   ├── services/ — İş mantığı ve servis katmanları  
-│   ├── utils/ — Yardımcı fonksiyonlar ve araçlar  
-│   ├── tests/ — Backend testleri  
-│   └── requirements.txt — Backend bağımlılıkları  
+#### Günlük Toplantılar (Daily Scrum)
+- Günlük ilerlemeler ve engeller (blocker) WhatsApp grubunda paylaşılarak takım içinde takip edildi.
+- [WhatsApp görsellerine git](./sprintTwo/wp_ss)
 
-├── **src/** — React frontend uygulaması  
-│   ├── components/ — Tekrar kullanılabilir React bileşenleri  
-│   ├── pages/ — Sayfa bileşenleri  
-│   ├── hooks/ — Özel React hook’ları  
-│   ├── utils/ — API çağrıları ve yardımcı fonksiyonlar  
-│   ├── types/ — TypeScript tip tanımları  
-│   ├── assets/ — Statik dosyalar (resimler, fontlar vs.)  
-│   ├── styles/ — CSS / SASS dosyaları  
-│   ├── tests/ — Frontend testleri  
-│   └── package.json — Frontend bağımlılıkları ve scriptler  
+#### Sprint Panosu
+- Sprint görevleri Trello üzerinde takip edilerek görsellerle belgelendi.
+- [Trello görsellerine git](./sprintTwo/trello_ss)
 
-├── **docs/** — Proje dokümantasyon dosyaları  
-├── **scripts/** — Kurulum, dağıtım ve yardımcı scriptler  
-├── .gitignore — Git yoksayılan dosyalar  
-├── README.md — Proje dokümantasyonu (bu dosya)  
-└── LICENSE — Lisans bilgileri  
+#### Mevcut Uygulama Durumu
+- Web kullanıcı arayüzünde temel sayfalar ve yönlendirmeler oluşturuldu.
+- Makine öğrenmesi API’leri için temel sözleşmeler belirlendi.
+- [Web görsellerine git](./sprintTwo/app_ss)
 
+---
 
 ### Teknik Detaylar
 
@@ -301,11 +275,9 @@ app.add_middleware(
 ## Bir Sonraki Sprint Hedefleri
 - **Veritabanı Entegrasyonu** (PostgreSQL/SQLite)
 - **Gerçek API Testleri** ve production deployment
-- **AI Chatbot Entegrasyonu** (OpenAI/Claude) ✅ **TAMAMLANDI**
+- **AI Chatbot Entegrasyonu** (OpenAI/Claude)
 - **Performance Optimizasyonu**
 - **Güvenlik Geliştirmeleri** (JWT, HTTPS)
-- **LLM Report Enhancement** ✅ **TAMAMLANDI**
-- **Professional PKL Models** ✅ **TAMAMLANDI**
 
 ---
 
@@ -318,129 +290,9 @@ app.add_middleware(
 - **Dağıtım Hazırlığı:** %100
 - **Backend Entegrasyonu:** %70
 - **Veritabanı:** %0
-- **LLM Integration:** %100 ✅
-- **Professional Models:** %100 ✅
 
 ## Sonuç
 
-Sprint 2 başarıyla tamamlandı. Temel sistem altyapısı hazır, kullanıcı arayüzü responsive ve modern. **LLM entegrasyonu ve profesyonel model dosyaları eksiksiz olarak tamamlandı.** Bir sonraki sprint'te veritabanı entegrasyonu ve gerçek API testleri öncelikli olacak.
+Sprint 2 başarıyla tamamlandı. Temel sistem altyapısı hazır, kullanıcı arayüzü responsive ve modern. Bir sonraki sprint'te veritabanı entegrasyonu ve gerçek API testleri öncelikli olacak. 
 
 </details>
-
----
-
-## 🤖 LLM Report Enhancement System
-
-### Yeni Özellikler ✅
-
-**AI Destekli Rapor Geliştirme:** Kullanıcılar "Raporu Geliştir (Chat ile)" butonu ile medikal sonuçlarını AI ile geliştirebilir.
-
-#### Desteklenen Modeller:
-- **🎗️ Meme Kanseri**: Morfololojik analiz raporları
-- **🫀 Kardiyovasküler**: Kardiyak risk değerlendirmeleri
-- **👶 Fetal Sağlık**: CTG analiz sonuçları
-
-#### LLM Providers:
-- **OpenAI GPT-4**: Gelişmiş medikal analiz
-- **Anthropic Claude**: Alternatif AI provider
-- **Ollama**: Local LLM desteği
-
-### Dosya Yapısı:
-```
-📁 LLM Integration/
-├── 📄 llm_report_enhancer.py      # Full async LLM service
-├── 📄 simple_llm_enhancer.py      # Simple sync version  
-├── 📄 llm_integration_examples.py # Usage examples
-├── 📄 requirements_llm.txt        # LLM dependencies
-└── 📄 LLM_INTEGRATION.md         # Complete documentation
-```
-
-### Kullanım:
-```python
-from simple_llm_enhancer import SimpleMedicalReportAPI
-
-api = SimpleMedicalReportAPI()
-result = api.enhance_report({
-    "domain": "breast_cancer",
-    "patient_data": {...},
-    "user_prompt": "Kullanıcının sorusu"
-})
-```
-
-### Environment Setup:
-```bash
-# API Keys
-export OPENAI_API_KEY=sk-your-key
-export ANTHROPIC_API_KEY=sk-your-key
-
-# Install dependencies
-pip install -r requirements_llm.txt
-```
-
----
-
-## 🔬 Professional Model Generation
-
-### PACE Methodology Implementation ✅
-
-Tüm medikal prediction modelleri **PACE** (Plan-Analyze-Construct-Execute) metodolojisi ile yeniden oluşturuldu.
-
-#### Generated Models:
-- **Breast Cancer**: 7 professional PKL files
-- **Cardiovascular**: 7 professional PKL files  
-- **Fetal Health**: 7 professional PKL files
-
-#### Model Components:
-```
-📁 model/model_*/
-├── 📄 *_optimized_model.pkl      # Main model
-├── 📄 feature_names.pkl          # Feature definitions
-├── 📄 feature_selector.pkl       # Feature selection
-├── 📄 scaler.pkl                 # Data normalization
-├── 📄 model_metadata.pkl         # Professional metadata
-├── 📄 predict.py                 # Prediction interface
-└── 📄 preprocess.py              # Data preprocessing
-```
-
-#### Performance Results:
-- **Average Accuracy**: 93.34%
-- **Industry Standard**: ✅ Professional PKL files
-- **Production Ready**: ✅ Deployment ready
-- **PACE Compliant**: ✅ Systematic methodology
-
----
-
-## 🚀 Getting Started
-
-### Quick Installation:
-```bash
-# Clone repository
-git clone <repository-url>
-cd YZTA-AI-17
-
-# Install Python dependencies
-pip install -r requirements.txt
-
-# Install Node.js dependencies  
-npm install
-
-# Setup environment variables
-cp .env.example .env
-# Edit .env with your API keys
-
-# Start backend
-python run.py
-
-# Start frontend (new terminal)
-npm start
-```
-
-### Production Deployment:
-```bash
-# Deploy with auto-configuration
-python deploy.py
-
-# Or manual deployment
-./start.sh  # Unix/Linux/Mac
-start.bat   # Windows
-```

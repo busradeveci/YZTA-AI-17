@@ -11,7 +11,7 @@ import {
   CardContent
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Login, Person } from '@mui/icons-material';
+import { Login } from '@mui/icons-material';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
