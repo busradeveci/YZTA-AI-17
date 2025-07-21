@@ -16,7 +16,7 @@ BASE_DIR = Path(__file__).parent.absolute()
 # Model configurations
 MODEL_CONFIGS = {
     'cardiovascular': {
-        'model_path': BASE_DIR / 'model' / 'model_cardiovascular' / 'cardiovascular_model.pkl',
+        'model_path': BASE_DIR / 'app' / 'model' / 'model_cad' / 'cardiovascular_model.pkl',
         'data_path': BASE_DIR / 'data' / 'Cardiovascular_Disease_Dataset.csv',
         'model_type': 'binary_classification',
         'target_classes': ['Sağlıklı', 'Kardiyovasküler Hastalık'],
@@ -24,7 +24,7 @@ MODEL_CONFIGS = {
         'api_endpoint': '/api/predict/cardiovascular'
     },
     'breast_cancer': {
-        'model_path': BASE_DIR / 'model' / 'model_breast' / 'breast_cancer_model.pkl',
+        'model_path': BASE_DIR / 'app' / 'model' / 'model_breast' / 'breast_cancer_model.pkl',
         'data_path': BASE_DIR / 'data' / 'Breast_Cancer.csv',
         'model_type': 'binary_classification',
         'target_classes': ['Malign', 'Benign'],
@@ -32,7 +32,7 @@ MODEL_CONFIGS = {
         'api_endpoint': '/api/predict/breast_cancer'
     },
     'fetal_health': {
-        'model_path': BASE_DIR / 'model' / 'model_fetal' / 'fetal_health_model.pkl',
+        'model_path': BASE_DIR / 'app' / 'model' / 'model_fetal' / 'fetal_health_model.pkl',
         'data_path': BASE_DIR / 'data' / 'fetal_health.csv',
         'model_type': 'multiclass_classification',
         'target_classes': ['Normal', 'Şüpheli', 'Patolojik'],

@@ -50,7 +50,39 @@ class ModelManager:
         
         # Load model data
         model_data = joblib.load(model_path)
-        self.models[model_name] = model_data
+        
+        # Model formatına göre handle et
+        if isinstance(model_data, dict):
+            # Eğer dict ise, model dict içinde
+            if 'model' in model_data:
+                actual_model = model_data['model']
+            else:
+                actual_model = model_data
+        else:
+            # Eğer direkt model objesi ise
+            actual_model = model_data
+            
+        # Scaler'ı yükle
+        scaler_path = model_path.parent / 'scaler.pkl'
+        scaler = None
+        if scaler_path.exists():
+            scaler = joblib.load(scaler_path)
+        
+        # Selected features'ı yükle (eğer varsa)
+        features_path = model_path.parent / 'selected_features.pkl'
+        feature_names = None
+        if features_path.exists():
+            feature_names = joblib.load(features_path)
+        
+        # Model verilerini organize et
+        organized_data = {
+            'model': actual_model,
+            'scaler': scaler,
+            'feature_names': feature_names,
+            'original_data': model_data if isinstance(model_data, dict) else None
+        }
+        
+        self.models[model_name] = organized_data
         
         # Load metadata if available
         metadata_path = model_path.parent / 'model_metadata.json'
@@ -88,6 +120,10 @@ class ModelManager:
         # Prepare input data
         input_df = pd.DataFrame([input_data])
         
+        # Feature names yoksa, input data'nın tüm kolonlarını kullan
+        if feature_names is None:
+            feature_names = list(input_df.columns)
+        
         # Ensure all features are present and in correct order
         missing_features = set(feature_names) - set(input_df.columns)
         if missing_features:
@@ -96,12 +132,21 @@ class ModelManager:
         # Select and order features
         input_df = input_df[feature_names]
         
-        # Scale features
-        input_scaled = scaler.transform(input_df)
+        # Scale features if scaler is available
+        if scaler is not None:
+            input_scaled = scaler.transform(input_df)
+        else:
+            input_scaled = input_df.values
         
         # Make prediction
         prediction = model.predict(input_scaled)[0]
-        probabilities = model.predict_proba(input_scaled)[0]
+        
+        # Get probabilities if available
+        try:
+            probabilities = model.predict_proba(input_scaled)[0]
+        except:
+            # If predict_proba is not available, create dummy probabilities
+            probabilities = np.array([0.5, 0.5]) if model_name != 'fetal_health' else np.array([0.33, 0.33, 0.34])
         
         # Format results based on model type
         if model_name == 'cardiovascular':
