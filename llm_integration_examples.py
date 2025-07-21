@@ -170,61 +170,6 @@ def frontend_integration_example():
     print("\nBackend Response:")
     print(json.dumps(result, indent=2, ensure_ascii=False))
 
-def flask_api_example():
-    """Flask API endpoint örneği."""
-    
-    flask_code = '''
-from flask import Flask, request, jsonify
-from simple_llm_enhancer import SimpleMedicalReportAPI
-
-app = Flask(__name__)
-api_handler = SimpleMedicalReportAPI()
-
-@app.route('/api/enhance-report', methods=['POST'])
-def enhance_report():
-    """LLM report enhancement endpoint."""
-    try:
-        request_data = request.get_json()
-        
-        # Validate request
-        if not request_data:
-            return jsonify({
-                "status": "error",
-                "error_message": "No data provided"
-            }), 400
-        
-        # Process with LLM
-        result = api_handler.enhance_report(request_data)
-        
-        # Return response
-        if result["status"] == "success":
-            return jsonify(result), 200
-        else:
-            return jsonify(result), 500
-            
-    except Exception as e:
-        return jsonify({
-            "status": "error",
-            "error_message": str(e)
-        }), 500
-
-@app.route('/api/health', methods=['GET'])
-def health_check():
-    """Health check endpoint."""
-    return jsonify({
-        "status": "healthy",
-        "service": "LLM Report Enhancer",
-        "timestamp": datetime.now().isoformat()
-    })
-
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
-'''
-    
-    print("🐍 FLASK API ENDPOINT EXAMPLE")
-    print("=" * 40)
-    print(flask_code)
-
 def fastapi_example():
     """FastAPI endpoint örneği."""
     
@@ -301,7 +246,7 @@ def environment_setup_guide():
    python llm_integration_examples.py
 
 6. Optional Dependencies:
-   pip install flask fastapi uvicorn  # for web API
+   pip install fastapi uvicorn  # for web API
    pip install aiohttp                # for async version
    
 7. Environment Variables Check:
@@ -377,7 +322,7 @@ if __name__ == "__main__":
         frontend_integration_example()
     
     print("\n📋 Additional examples:")
-    print("- flask_api_example()")
+    print("- fastapi_example()")
     print("- fastapi_example()")
     print("- environment_setup_guide()")
     print("- security_considerations()")

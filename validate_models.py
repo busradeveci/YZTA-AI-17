@@ -170,7 +170,7 @@ def main():
         print(f"   🎗️ Breast Cancer Classification")
         print(f"   🫀 Cardiovascular Disease Prediction") 
         print(f"   👶 Fetal Health Assessment")
-        print(f"\n🚀 Modeller Flask uygulamasında kullanılabilir!")
+        print(f"\n🚀 Modeller FastAPI uygulamasında kullanılabilir!")
         return True
     else:
         print(f"\n❌ Bazı kontroller başarısız!")

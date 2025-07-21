@@ -42,7 +42,7 @@ Navigate to `http://127.0.0.1:5000`
 
 ```
 YZTA-AI-17/
-├── app/                          # Flask application
+├── app/                          # FastAPI application models
 │   ├── __init__.py              # App factory
 │   ├── routes.py                # API endpoints
 │   ├── utils.py                 # Model manager
@@ -161,12 +161,13 @@ The project follows these standards:
 
 ### Environment Variables
 ```bash
-# Development
-export FLASK_ENV=development
-export FLASK_DEBUG=1
+```bash
+# Development environment
+export API_ENV=development
+export DEBUG=1
 
-# Production
-export FLASK_ENV=production
+# Production environment  
+export API_ENV=production
 export SECRET_KEY=your-secret-key
 ```
 
@@ -392,7 +393,7 @@ python run.py --debug
 
 ## 📚 Additional Resources
 
-- **Flask Documentation**: https://flask.palletsprojects.com/
+- **FastAPI Documentation**: https://fastapi.tiangolo.com/
 - **Scikit-learn**: https://scikit-learn.org/
 - **Pandas**: https://pandas.pydata.org/
 - **Medical ML Best Practices**: https://www.fda.gov/medical-devices/software-medical-device-samd/artificial-intelligence-and-machine-learning-software-medical-device

@@ -106,7 +106,7 @@ PACE (Plan, Analyze, Construct, Execute) metodolojisi kullanılarak üç farklı
 - ✅ Production-ready PKL dosyaları oluşturuldu
 - ✅ Comprehensive metadata ve dokümantasyon
 - ✅ Test fonksiyonları ve validasyon scriptleri
-- ✅ Flask entegrasyonu için hazır yapı
+- ✅ FastAPI entegrasyonu için hazır yapı
 
 ## 🏥 Klinik ve İş Değeri
 
@@ -127,7 +127,7 @@ PACE (Plan, Analyze, Construct, Execute) metodolojisi kullanılarak üç farklı
 - Model artifacts tamam (%100)
 - Test fonksiyonları çalışıyor (%100)
 - Documentation tamamlandı (%100)
-- Flask entegrasyonu hazır (%100)
+- FastAPI entegrasyonu hazır (%100)
 
 ### 🔄 Continuous Improvement
 - Model monitoring altyapısı planlandı

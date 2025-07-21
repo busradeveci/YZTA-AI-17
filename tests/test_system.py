@@ -220,18 +220,17 @@ class TestModelManager(unittest.TestCase):
             self.assertIsInstance(models, list)
 
 
-class TestFlaskApp(unittest.TestCase):
-    """Test Flask application."""
+class TestFastAPIApp(unittest.TestCase):
+    """Test FastAPI application."""
     
     def setUp(self):
-        """Set up test fixtures."""
+        """Set up test environment."""
         try:
-            self.app = create_app('testing')
-            self.client = self.app.test_client()
-            self.app_context = self.app.app_context()
-            self.app_context.push()
-        except Exception:
-            self.skipTest("Flask app not available")
+            # Import FastAPI app
+            from backend.main import app
+            self.app = app
+        except ImportError:
+            self.skipTest("FastAPI app not available")
     
     def tearDown(self):
         """Clean up test fixtures."""
@@ -396,7 +395,7 @@ def run_tests():
         TestBreastCancerPredictor,
         TestFetalHealthPredictor,
         TestModelManager,
-        TestFlaskApp,
+        TestFastAPIApp,
         TestConfiguration,
         TestProjectStructure
     ]
@@ -421,7 +420,7 @@ def run_specific_test(test_class_name):
         'breast': TestBreastCancerPredictor,
         'fetal': TestFetalHealthPredictor,
         'manager': TestModelManager,
-        'flask': TestFlaskApp,
+        'fastapi': TestFastAPIApp,
         'config': TestConfiguration,
         'structure': TestProjectStructure
     }
