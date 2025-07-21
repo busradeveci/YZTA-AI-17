@@ -316,7 +316,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - FLASK_ENV=production
+      - FASTAPI_ENV=production
     volumes:
       - ./logs:/app/logs
     restart: unless-stopped
@@ -394,7 +394,7 @@ node_modules
         
         try:
             # Set production environment
-            os.environ['FLASK_ENV'] = 'production'
+            os.environ['FASTAPI_ENV'] = 'production'
             
             # Run tests
             result = subprocess.run([

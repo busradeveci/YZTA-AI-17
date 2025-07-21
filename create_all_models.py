@@ -1,7 +1,17 @@
 #!/usr/bin/env python3
 """
-YZTA-AI-17 Proje - Tüm ML Modellerini Oluşturma Scripti
-Bu script tüm sağlık tahmin modellerini eğitip pkl dosyalarını oluşturur.
+🎯 PACE Metodolojisi - YZTA-AI-17 Tüm ML Modellerini Oluşturma Scripti
+======================================================================
+
+Bu script PACE (Plan, Analyze, Construct, Execute) metodolojisine uygun olarak
+tüm sağlık tahmin modellerini eğitip pkl dosyalarını oluşturur.
+
+Modeller:
+- Breast Cancer Detection (Binary Classification)
+- Cardiovascular Disease Prediction (Binary Classification)  
+- Fetal Health Assessment (Multi-class Classification)
+
+FastAPI entegrasyonu için gerekli PKL dosyalarını üretir.
 """
 
 import pandas as pd

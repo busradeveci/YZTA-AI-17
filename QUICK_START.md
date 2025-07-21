@@ -1,31 +1,44 @@
-# 🚀 YZTA AI-17 Hızlı Başlangıç
+# 🚀 YZTA AI-17 Hızlı Başlangıç - PACE Metodolojisi
 
-## 📋 Tek Komutla Başlatma
+## 🎯 PACE Projesi Özeti
 
-Bu proje artık tek bir komutla başlatılabilir! 
+Bu proje **PACE (Plan, Analyze, Construct, Execute)** metodolojisi kullanılarak geliştirilmiş 3 ayrı sağlık tahmin modelini içerir:
 
+- 🎗️ **Breast Cancer Detection** (Binary Classification)
+- 🫀 **Cardiovascular Disease Prediction** (Binary Classification)
+- 👶 **Fetal Health Assessment** (Multi-class Classification)
+
+**Önemli:** Tüm Flask bağımlılıkları kaldırılmış, sadece **FastAPI** kullanılmaktadır.
+
+## 📋 Hızlı Başlangıç
+
+### 1. 🧪 Modelleri Oluştur ve Test Et
 ```bash
-python run.py
+# Tüm notebook'ları çalıştır ve modelleri oluştur
+python run_all_notebooks.py
+
+# Veya sadece modelleri oluştur
+python create_all_models.py
 ```
 
-Bu komut:
-- ✅ Tüm Python bağımlılıklarını otomatik kontrol eder ve kurar
-- ✅ Node.js/npm bağımlılıklarını otomatik kontrol eder ve kurar 
-- ✅ React frontend'ini başlatır (http://localhost:3000)
-- ✅ FastAPI backend'ini başlatır (http://localhost:8000)
-- ✅ Tarayıcıyı otomatik açar
+### 2. 🚀 FastAPI Backend'i Başlat
+```bash
+# Backend'i başlat
+python run.py
 
-## 🛠️ Ön Gereksinimler
+# Veya manuel olarak
+cd backend
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
 
-### Python (Gerekli)
-- Python 3.8 veya üzeri
-- pip paket yöneticisi
+### 3. 📡 API'yi Test Et
+```bash
+# API dokümantasyonu
+http://localhost:8000/docs
 
-### Node.js (İsteğe bağlı - frontend için)
-- Node.js 14 veya üzeri
-- npm paket yöneticisi
-
-Node.js yüklü değilse, sadece backend API çalışacaktır.
+# Health check
+curl http://localhost:8000/health
+```
 
 ## 📱 Kullanım Seçenekleri
 

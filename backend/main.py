@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Dict, Any, List, Optional
 import joblib
@@ -7,6 +8,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 import os
+import json
 import logging
 
 # Logging ayarları
@@ -14,15 +16,15 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = FastAPI(
-    title="Sağlık Tarama API",
-    description="Yapay zeka destekli sağlık risk analizi API'si",
+    title="Health Screening API",
+    description="AI-powered health risk analysis API",
     version="1.0.0"
 )
 
-# CORS ayarları - Frontend ile iletişim için
+# CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # React uygulaması
+    allow_origins=["*"],  # Tüm origin'lere izin ver
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -68,36 +70,90 @@ model_info = {}
 def load_models():
     """ML modellerini yükle"""
     try:
-        models_dir = "models"
-        if not os.path.exists(models_dir):
-            os.makedirs(models_dir)
-            logger.info(f"Models dizini oluşturuldu: {models_dir}")
+        # PACE modelleri için app/model dizinine bak - mutlak yol kullan
+        models_base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "app", "model"))
+        if not os.path.exists(models_base_dir):
+            logger.warning(f"Models dizini bulunamadı: {models_base_dir}")
+            logger.info("Modeller henüz oluşturulmamış. python create_all_models.py çalıştırın.")
             return
 
-        # Models dizinindeki tüm .pkl dosyalarını yükle
-        for filename in os.listdir(models_dir):
-            if filename.endswith('.pkl'):
-                model_path = os.path.join(models_dir, filename)
-                model_name = filename.replace('.pkl', '')
+        # Alt dizinlerdeki modelleri yükle
+        model_dirs = ['model_breast', 'model_cad', 'model_fetal']
+        
+        for model_dir in model_dirs:
+            dir_path = os.path.join(models_base_dir, model_dir)
+            if not os.path.exists(dir_path):
+                logger.warning(f"Model dizini bulunamadı: {dir_path}")
+                continue
                 
-                try:
-                    model = joblib.load(model_path)
-                    models[model_name] = model
-                    
-                    # Model bilgilerini kaydet
-                    model_info[model_name] = {
-                        'path': model_path,
-                        'loaded_at': datetime.now().isoformat(),
-                        'type': type(model).__name__
-                    }
-                    
-                    logger.info(f"Model yüklendi: {model_name}")
-                    
-                except Exception as e:
-                    logger.error(f"Model yükleme hatası ({model_name}): {e}")
+            # Model dosyalarını yükle
+            model_files = {
+                'model_breast': 'breast_cancer_model.pkl',
+                'model_cad': 'cardiovascular_model.pkl', 
+                'model_fetal': 'fetal_health_model.pkl'
+            }
+            
+            model_file = model_files.get(model_dir)
+            if not model_file:
+                continue
+                
+            model_path = os.path.join(dir_path, model_file)
+            if not os.path.exists(model_path):
+                logger.warning(f"Model dosyası bulunamadı: {model_path}")
+                continue
+            
+            try:
+                # Ana modeli yükle
+                model = joblib.load(model_path)
+                
+                # Scaler'ı yükle
+                scaler_path = os.path.join(dir_path, 'scaler.pkl')
+                scaler = joblib.load(scaler_path) if os.path.exists(scaler_path) else None
+                
+                # Features'ları yükle
+                features_path = os.path.join(dir_path, 'selected_features.pkl')
+                features = joblib.load(features_path) if os.path.exists(features_path) else []
+                
+                # Metadata'yı yükle (JSON formatında)
+                metadata_path = os.path.join(dir_path, 'model_metadata.json')
+                metadata = {}
+                if os.path.exists(metadata_path):
+                    try:
+                        with open(metadata_path, 'r', encoding='utf-8') as f:
+                            metadata = json.load(f)
+                    except Exception as e:
+                        logger.warning(f"Metadata yükleme hatası: {e}")
+                        metadata = {}
+                
+                # Model paketini oluştur
+                models[model_dir] = {
+                    'model': model,
+                    'scaler': scaler,
+                    'features': features,
+                    'metadata': metadata
+                }
+                
+                # Model bilgilerini kaydet
+                model_info[model_dir] = {
+                    'name': metadata.get('model_name', 'Unknown'),
+                    'accuracy': metadata.get('performance_metrics', {}).get('test_accuracy', 0.0),
+                    'features_count': len(features),
+                    'path': model_path,
+                    'loaded_at': datetime.now().isoformat(),
+                    'type': type(model).__name__,
+                    'model_type': metadata.get('model_type', 'Unknown'),
+                    'problem_type': metadata.get('problem_type', 'Unknown')
+                }
+                
+                logger.info(f"✅ Model yüklendi: {model_dir} ({metadata.get('model_type', 'Unknown')})")
+                
+            except Exception as e:
+                logger.error(f"❌ Model yükleme hatası ({model_dir}): {e}")
+                
+        logger.info(f"📊 Toplam {len(models)} model yüklendi")
                     
     except Exception as e:
-        logger.error(f"Model yükleme genel hatası: {e}")
+        logger.error(f"❌ Model yükleme genel hatası: {e}")
 
 def preprocess_data(form_data: Dict[str, Any], model_name: str) -> pd.DataFrame:
     """Form verilerini model için uygun formata dönüştür"""
@@ -203,25 +259,45 @@ def preprocess_depression_data(df: pd.DataFrame) -> pd.DataFrame:
     
     return df
 
-def predict_with_model(model, form_data: Dict[str, Any], model_name: str) -> Dict[str, Any]:
+def predict_with_model(model_package, form_data: Dict[str, Any], model_name: str) -> Dict[str, Any]:
     """Eğitilmiş model ile tahmin yap"""
     try:
-        # Veriyi ön işle
-        df = preprocess_data(form_data, model_name)
+        # Model paketinden bileşenleri al
+        model = model_package['model']
+        scaler = model_package['scaler']
+        features = model_package['features']
+        metadata = model_package['metadata']
+        
+        # Sadece seçili özellikleri kullan
+        input_values = []
+        for feature in features:
+            if feature in form_data:
+                input_values.append(float(form_data[feature]))
+            else:
+                # Eksik özellik için varsayılan değer
+                logger.warning(f"Eksik özellik: {feature}, varsayılan değer kullanılıyor")
+                input_values.append(0.0)
+        
+        # Veriyi numpy array'e çevir
+        input_array = np.array(input_values).reshape(1, -1)
+        
+        # Ölçeklendir
+        if scaler:
+            input_scaled = scaler.transform(input_array)
+        else:
+            input_scaled = input_array
         
         # Model tahmini yap
+        prediction = model.predict(input_scaled)[0]
+        
         if hasattr(model, 'predict_proba'):
-            # Olasılık tahmini varsa
-            probabilities = model.predict_proba(df)
-            prediction = model.predict(df)[0]
-            confidence = max(probabilities[0]) if len(probabilities) > 0 else 0.5
+            probabilities = model.predict_proba(input_scaled)[0]
+            confidence = max(probabilities)
         else:
-            # Sadece sınıf tahmini
-            prediction = model.predict(df)[0]
-            confidence = 0.5  # Varsayılan güven skoru
+            confidence = 0.5
         
         # Tahmin sonucunu işle
-        result = process_prediction_result(prediction, confidence, model_name)
+        result = process_prediction_result(prediction, confidence, model_name, metadata)
         
         return result
         
@@ -229,25 +305,32 @@ def predict_with_model(model, form_data: Dict[str, Any], model_name: str) -> Dic
         logger.error(f"Model tahmin hatası ({model_name}): {e}")
         raise HTTPException(status_code=500, detail=f"Model tahmin hatası: {str(e)}")
 
-def process_prediction_result(prediction, confidence: float, model_name: str) -> Dict[str, Any]:
+def process_prediction_result(prediction, confidence: float, model_name: str, metadata: Dict = None) -> Dict[str, Any]:
     """Tahmin sonucunu işle ve uygun yanıt oluştur"""
     
+    # Metadata'dan bilgi al
+    if metadata:
+        class_mapping = metadata.get('class_mapping', {})
+        model_type = metadata.get('model_type', '')
+        prediction_label = class_mapping.get(str(int(prediction)), f'Class {prediction}')
+    else:
+        prediction_label = str(prediction)
+        model_type = ''
+    
     # Model tipine göre sonuç işleme
-    if 'heart' in model_name.lower():
-        return process_heart_result(prediction, confidence)
+    if 'cad' in model_name.lower() or 'cardiovascular' in model_name.lower():
+        return process_heart_result(prediction, confidence, prediction_label)
     elif 'fetal' in model_name.lower():
-        return process_fetal_result(prediction, confidence)
-    elif 'breast' in model_name.lower() or 'cancer' in model_name.lower():
-        return process_breast_result(prediction, confidence)
-    elif 'depression' in model_name.lower():
-        return process_depression_result(prediction, confidence)
+        return process_fetal_result(prediction, confidence, prediction_label)
+    elif 'breast' in model_name.lower():
+        return process_breast_result(prediction, confidence, prediction_label)
     else:
         # Genel sonuç işleme
-        return process_general_result(prediction, confidence)
+        return process_general_result(prediction, confidence, prediction_label)
 
-def process_heart_result(prediction, confidence: float) -> Dict[str, Any]:
+def process_heart_result(prediction, confidence: float, prediction_label: str = None) -> Dict[str, Any]:
     """Kalp hastalığı sonucunu işle"""
-    if prediction == 1 or prediction == 'high':
+    if prediction == 1 or prediction_label == 'Disease':
         risk = "high"
         score = 85.0
         message = "Yüksek kalp hastalığı riski tespit edildi. Acil tıbbi değerlendirme gerekli."
@@ -256,7 +339,7 @@ def process_heart_result(prediction, confidence: float) -> Dict[str, Any]:
             "Acil durum belirtilerini öğrenin",
             "Tüm risk faktörlerinizi doktorunuzla paylaşın"
         ]
-    elif prediction == 0 or prediction == 'low':
+    else:
         risk = "low"
         score = 15.0
         message = "Düşük kalp hastalığı riski. Genel sağlık durumunuz iyi görünüyor."
@@ -264,15 +347,6 @@ def process_heart_result(prediction, confidence: float) -> Dict[str, Any]:
             "Düzenli kardiyovasküler egzersiz yapın",
             "Sağlıklı beslenme alışkanlıklarını sürdürün",
             "Yıllık sağlık kontrollerinizi aksatmayın"
-        ]
-    else:
-        risk = "medium"
-        score = 50.0
-        message = "Orta kalp hastalığı riski. Dikkatli olmanız gereken durumlar var."
-        recommendations = [
-            "Bir kardiyolog ile görüşün",
-            "Kan basıncınızı düzenli takip edin",
-            "Kolesterol seviyelerinizi kontrol ettirin"
         ]
     
     return {
@@ -283,7 +357,7 @@ def process_heart_result(prediction, confidence: float) -> Dict[str, Any]:
         "confidence": confidence
     }
 
-def process_fetal_result(prediction, confidence: float) -> Dict[str, Any]:
+def process_fetal_result(prediction, confidence: float, prediction_label: str = None) -> Dict[str, Any]:
     """Fetal sağlık sonucunu işle"""
     if prediction == 1 or prediction == 'high':
         risk = "high"
@@ -321,7 +395,7 @@ def process_fetal_result(prediction, confidence: float) -> Dict[str, Any]:
         "confidence": confidence
     }
 
-def process_breast_result(prediction, confidence: float) -> Dict[str, Any]:
+def process_breast_result(prediction, confidence: float, prediction_label: str = None) -> Dict[str, Any]:
     """Meme kanseri sonucunu işle"""
     if prediction == 1 or prediction == 'high':
         risk = "high"
@@ -397,7 +471,7 @@ def process_depression_result(prediction, confidence: float) -> Dict[str, Any]:
         "confidence": confidence
     }
 
-def process_general_result(prediction, confidence: float) -> Dict[str, Any]:
+def process_general_result(prediction, confidence: float, prediction_label: str = None) -> Dict[str, Any]:
     """Genel sonuç işleme"""
     # Tahmin değerine göre risk seviyesi belirle
     if isinstance(prediction, (int, float)):
@@ -448,13 +522,14 @@ async def startup_event():
 @app.get("/")
 async def root():
     """Ana endpoint"""
-    return {
+    data = {
         "message": "Sağlık Tarama API'sine Hoş Geldiniz",
         "version": "1.0.0",
         "status": "active",
         "loaded_models": list(models.keys()),
         "timestamp": datetime.now().isoformat()
     }
+    return JSONResponse(content=data, media_type="application/json; charset=utf-8")
 
 @app.get("/health")
 async def health_check():
@@ -553,10 +628,12 @@ async def predict_health_risk(request: HealthTestRequest):
         
         # Test tipine göre model adını belirle
         model_mapping = {
-            "heart-disease": "heart_disease",
-            "fetal-health": "fetal_health", 
-            "breast-cancer": "breast_cancer",
-            "depression": "depression"
+            "heart-disease": "model_cad",
+            "fetal-health": "model_fetal", 
+            "breast-cancer": "model_breast",
+            "cardiovascular": "model_cad",
+            "breast": "model_breast",
+            "fetal": "model_fetal"
         }
         
         model_name = model_mapping.get(test_type)
