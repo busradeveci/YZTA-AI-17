@@ -33,6 +33,7 @@ import {
 import { useNavigate, useParams } from 'react-router-dom';
 import { healthTests, predictTestResult } from '../utils/mockData';
 import { TestResult } from '../types';
+import robotIcon from '../images/robot.png'; // en üste ekleyin
 
 const TestResultPage: React.FC = () => {
   const navigate = useNavigate();
@@ -125,11 +126,9 @@ const TestResultPage: React.FC = () => {
   const handleChatSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!chatInput.trim()) return;
-    // Kullanıcı mesajını ekle
-    setChatHistory(prev => [...prev, `🧑‍💻 ${chatInput}`]);
-    // Bot yanıtı simülasyonu
+    setChatHistory(prev => [...prev, chatInput]);
     setTimeout(() => {
-      setChatHistory(prev => [...prev, `🤖 Rapor güncellendi: ${chatInput} (örnek yanıt)`]);
+      setChatHistory(prev => [...prev, `Rapor güncellendi: ${chatInput} (örnek yanıt)`]);
     }, 1000);
     setChatInput('');
   };
@@ -156,26 +155,57 @@ const TestResultPage: React.FC = () => {
   const test = healthTests.find(t => t.id === testResult.testId);
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="lg" sx={{ py: 4, backgroundColor: '#FFFFFF', minHeight: '100vh', fontFamily: 'Inter, Arial, sans-serif' }}>
       {/* Başlık */}
       <Box sx={{ mb: 4 }}>
         <Button
           startIcon={<ArrowBack />}
           onClick={() => navigate('/dashboard')}
-          sx={{ mb: 2 }}
+          sx={{
+            mb: 2,
+            color: '#0F3978',
+            fontWeight: 600,
+            fontFamily: 'Manrope, Arial, sans-serif',
+            borderRadius: 2,
+            background: '#F8FBFF',
+            border: '1.5px solid #E0E7EF',
+            boxShadow: '0 2px 8px 0 rgba(30, 89, 174, 0.08)',
+            '&:hover': {
+              background: '#E0E7EF',
+            }
+          }}
         >
           Dashboard'a Dön
         </Button>
-        
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-          <Typography variant="h3" sx={{ mr: 2 }}>
-            {test?.icon}
-          </Typography>
+          {test?.icon && (
+            <img
+              src={test.icon}
+              alt={test.name}
+              style={{
+                width: 48,
+                height: 48,
+                objectFit: 'contain',
+                marginRight: 16,
+                background: 'transparent',
+                userSelect: 'none'
+              }}
+              draggable={false}
+            />
+          )}
           <Box>
-            <Typography variant="h4" component="h1" sx={{ fontWeight: 700 }}>
+            <Typography variant="h4" component="h1" sx={{
+              fontWeight: 700,
+              fontFamily: 'Manrope, Arial, sans-serif',
+              color: '#0F3978',
+              letterSpacing: '-0.5px'
+            }}>
               {test?.name} - Sonuçlar
             </Typography>
-            <Typography variant="h6" color="text.secondary">
+            <Typography variant="h6" sx={{
+              color: '#4787E6',
+              fontFamily: 'Inter, Arial, sans-serif'
+            }}>
               Test tamamlandı • {new Date(testResult.createdAt).toLocaleDateString('tr-TR')}
             </Typography>
           </Box>
@@ -186,45 +216,86 @@ const TestResultPage: React.FC = () => {
         {/* Sol Taraf - Ana Sonuçlar */}
         <Box sx={{ flex: { lg: 2 } }}>
           {/* Risk Değerlendirmesi */}
-          <Card elevation={3} sx={{ mb: 4 }}>
+          <Card elevation={3} sx={{
+            mb: 4,
+            background: '#F8FBFF',
+            border: '1.5px solid #E0E7EF',
+            boxShadow: '0 4px 24px 0 rgba(30, 89, 174, 0.10)',
+            borderRadius: 4,
+          }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                <Avatar sx={{ bgcolor: `${getRiskColor(testResult.risk)}.main`, mr: 2, width: 56, height: 56 }}>
+                <Avatar sx={{
+                  bgcolor: `${getRiskColor(testResult.risk)}.main`,
+                  mr: 2,
+                  width: 56,
+                  height: 56,
+                  fontSize: 36
+                }}>
                   {getRiskIcon(testResult.risk)}
                 </Avatar>
                 <Box>
-                  <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                  <Typography variant="h5" sx={{
+                    fontWeight: 700,
+                    fontFamily: 'Manrope, Arial, sans-serif',
+                    color: '#0F3978'
+                  }}>
                     Risk Değerlendirmesi
                   </Typography>
                   <Chip
                     label={getRiskText(testResult.risk)}
                     color={getRiskColor(testResult.risk) as any}
                     size="medium"
-                    sx={{ fontSize: '1rem', fontWeight: 600 }}
+                    sx={{
+                      fontSize: '1rem',
+                      fontWeight: 600,
+                      fontFamily: 'Inter, Arial, sans-serif',
+                      borderRadius: 2
+                    }}
                   />
                 </Box>
               </Box>
 
-              <Alert severity={getRiskColor(testResult.risk) as any} sx={{ mb: 3 }}>
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              <Alert severity={getRiskColor(testResult.risk) as any} sx={{
+                mb: 3,
+                fontFamily: 'Inter, Arial, sans-serif',
+                borderRadius: 2
+              }}>
+                <Typography variant="h6" sx={{
+                  fontWeight: 600,
+                  fontFamily: 'Manrope, Arial, sans-serif'
+                }}>
                   {testResult.message}
                 </Typography>
               </Alert>
 
               <Box sx={{ textAlign: 'center', mb: 3 }}>
-                <Typography variant="h3" sx={{ fontWeight: 700, color: 'primary.main' }}>
+                <Typography variant="h3" sx={{
+                  fontWeight: 700,
+                  color: '#1B69DE',
+                  fontFamily: 'Manrope, Arial, sans-serif'
+                }}>
                   {testResult.score}/100
                 </Typography>
-                <Typography variant="body1" color="text.secondary">
+                <Typography variant="body1" sx={{
+                  color: '#4787E6',
+                  fontFamily: 'Inter, Arial, sans-serif'
+                }}>
                   Risk Skoru
                 </Typography>
-                
                 {testResult.confidence && (
                   <Box sx={{ mt: 2 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 600, color: 'success.main' }}>
+                    <Typography variant="h6" sx={{
+                      fontWeight: 600,
+                      color: '#2CB67D',
+                      fontFamily: 'Manrope, Arial, sans-serif'
+                    }}>
                       {(testResult.confidence * 100).toFixed(1)}%
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                      color: '#4787E6',
+                      fontFamily: 'Inter, Arial, sans-serif'
+                    }}>
                       Model Güven Skoru
                     </Typography>
                   </Box>
@@ -233,8 +304,12 @@ const TestResultPage: React.FC = () => {
 
               <Divider sx={{ my: 3 }} />
 
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-                📋 Öneriler
+              <Typography variant="h6" gutterBottom sx={{
+                fontWeight: 600,
+                fontFamily: 'Manrope, Arial, sans-serif',
+                color: '#0F3978'
+              }}>
+                Öneriler
               </Typography>
               <List>
                 {testResult.recommendations.map((recommendation, index) => (
@@ -244,7 +319,10 @@ const TestResultPage: React.FC = () => {
                     </ListItemIcon>
                     <ListItemText
                       primary={recommendation}
-                      primaryTypographyProps={{ variant: 'body1' }}
+                      primaryTypographyProps={{
+                        variant: 'body1',
+                        sx: { fontFamily: 'Inter, Arial, sans-serif' }
+                      }}
                     />
                   </ListItem>
                 ))}
@@ -253,20 +331,47 @@ const TestResultPage: React.FC = () => {
           </Card>
 
           {/* Test Verileri */}
-          <Card elevation={2}>
+          <Card elevation={2} sx={{
+            background: '#F8FBFF',
+            border: '1.5px solid #E0E7EF',
+            boxShadow: '0 2px 12px 0 rgba(30, 89, 174, 0.07)',
+            borderRadius: 4,
+          }}>
             <CardContent>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
-                📊 Test Verileri
+              <Typography variant="h6" gutterBottom sx={{
+                fontWeight: 600,
+                mb: 3,
+                fontFamily: 'Manrope, Arial, sans-serif',
+                color: '#0F3978'
+              }}>
+                Test Verileri
               </Typography>
-              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, gap: 2 }}>
+              <Box sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
+                gap: 2
+              }}>
                 {Object.entries(testResult.formData).map(([key, value]) => {
                   const field = test?.fields.find(f => f.name === key);
                   return (
-                    <Paper key={key} variant="outlined" sx={{ p: 2 }}>
-                      <Typography variant="body2" color="text.secondary" gutterBottom>
+                    <Paper key={key} variant="outlined" sx={{
+                      p: 2,
+                      background: '#fff',
+                      border: '1.5px solid #E0E7EF',
+                      borderRadius: 2,
+                      boxShadow: '0 1px 4px 0 rgba(30, 89, 174, 0.04)'
+                    }}>
+                      <Typography variant="body2" sx={{
+                        color: '#4787E6',
+                        fontFamily: 'Inter, Arial, sans-serif'
+                      }} gutterBottom>
                         {field?.label || key}
                       </Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                      <Typography variant="body1" sx={{
+                        fontWeight: 600,
+                        fontFamily: 'Manrope, Arial, sans-serif',
+                        color: '#0F3978'
+                      }}>
                         {typeof value === 'boolean' ? (value ? 'Evet' : 'Hayır') : value}
                       </Typography>
                     </Paper>
@@ -282,7 +387,19 @@ const TestResultPage: React.FC = () => {
               variant="outlined"
               color="primary"
               fullWidth
-              sx={{ mt: 3, fontWeight: 600 }}
+              sx={{
+                mt: 3,
+                fontWeight: 600,
+                fontFamily: 'Manrope, Arial, sans-serif',
+                borderRadius: 2,
+                borderColor: '#0ED1B1',
+                color: '#0F3978',
+                background: '#fff',
+                '&:hover': {
+                  borderColor: '#1B69DE',
+                  background: '#F0F6FF'
+                }
+              }}
               onClick={() => setShowChat(true)}
             >
               Raporu Geliştir (Chat ile)
@@ -298,32 +415,61 @@ const TestResultPage: React.FC = () => {
                   value={chatInput}
                   onChange={e => setChatInput(e.target.value)}
                   size="small"
+                  sx={{
+                    fontFamily: 'Inter, Arial, sans-serif',
+                    background: '#fff',
+                    borderRadius: 2
+                  }}
+                  InputProps={{
+                    style: {
+                      fontFamily: 'Inter, Arial, sans-serif',
+                      fontSize: '12px',
+                    },
+                  }}
                 />
                 <Button
                   type="submit"
                   variant="contained"
                   color="primary"
                   disabled={!chatInput.trim()}
-                  sx={{ minWidth: 48 }}
+                  sx={{
+                    minWidth: 48,
+                    borderRadius: 2,
+                    background: 'linear-gradient(90deg, #0ED1B1 0%, #1B69DE 100%)',
+                    color: '#fff',
+                    fontFamily: 'Manrope, Arial, sans-serif',
+                    fontWeight: 600,
+                    '&:hover': {
+                      background: 'linear-gradient(90deg, #1B69DE 0%, #0ED1B1 100%)',
+                    }
+                  }}
                 >
                   <Send />
                 </Button>
               </form>
-            </Box>
-          )}
-
-          {/* Eklenen chat tabanlı metinler */}
-          {chatHistory.length > 0 && (
-            <Box sx={{ mt: 3 }}>
-              <Divider sx={{ mb: 2 }} />
-              <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                💬 Rapor Geliştirme Geçmişi
-              </Typography>
-              {chatHistory.map((msg, idx) => (
-                <Alert key={idx} severity={msg.startsWith('🧑‍💻') ? 'info' : 'success'} sx={{ mb: 1 }}>
-                  {msg}
-                </Alert>
-              ))}
+              {/* Chat geçmişi */}
+              {chatHistory.length > 0 && (
+                <Box sx={{ mt: 3 }}>
+                  <Divider sx={{ mb: 2 }} />
+                  <Typography variant="h6" sx={{
+                    fontWeight: 600,
+                    mb: 1,
+                    fontFamily: 'Manrope, Arial, sans-serif',
+                    color: '#0F3978'
+                  }}>
+                    Rapor Geliştirme Geçmişi
+                  </Typography>
+                  {chatHistory.map((msg, idx) => (
+                    <Alert key={idx} severity={idx % 2 === 0 ? 'info' : 'success'} sx={{
+                      mb: 1,
+                      fontFamily: 'Inter, Arial, sans-serif',
+                      borderRadius: 2
+                    }}>
+                      {msg}
+                    </Alert>
+                  ))}
+                </Box>
+              )}
             </Box>
           )}
         </Box>
@@ -331,34 +477,70 @@ const TestResultPage: React.FC = () => {
         {/* Sağ Taraf - PDF ve İşlemler */}
         <Box sx={{ flex: { lg: 1 } }}>
           {/* PDF İşlemleri */}
-          <Card elevation={3} sx={{ mb: 4 }}>
+          <Card elevation={3} sx={{
+            mb: 4,
+            background: '#F8FBFF',
+            border: '1.5px solid #E0E7EF',
+            boxShadow: '0 4px 24px 0 rgba(30, 89, 174, 0.10)',
+            borderRadius: 4,
+          }}>
             <CardContent>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
-                📄 PDF Raporu
+              <Typography variant="h6" gutterBottom sx={{
+                fontWeight: 600,
+                mb: 3,
+                fontFamily: 'Manrope, Arial, sans-serif',
+                color: '#0F3978'
+              }}>
+                PDF Raporu
               </Typography>
-              
               <Box sx={{ mb: 3 }}>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                <Typography variant="body2" sx={{
+                  color: '#4787E6',
+                  fontFamily: 'Inter, Arial, sans-serif',
+                  mb: 2
+                }}>
                   Test sonuçlarınızın detaylı PDF raporunu görüntüleyebilir veya indirebilirsiniz.
                 </Typography>
               </Box>
-
               <Button
                 fullWidth
                 variant="contained"
                 startIcon={<Visibility />}
                 onClick={handleViewPDF}
-                sx={{ mb: 2, py: 1.5, fontWeight: 600 }}
+                sx={{
+                  mb: 2,
+                  py: 1.5,
+                  fontWeight: 600,
+                  fontFamily: 'Manrope, Arial, sans-serif',
+                  borderRadius: 2,
+                  background: 'linear-gradient(90deg, #0ED1B1 0%, #1B69DE 100%)',
+                  color: '#fff',
+                  boxShadow: '0 2px 8px 0 rgba(14,209,177,0.08)',
+                  '&:hover': {
+                    background: 'linear-gradient(90deg, #1B69DE 0%, #0ED1B1 100%)',
+                  }
+                }}
               >
                 PDF Görüntüle
               </Button>
-
               <Button
                 fullWidth
                 variant="outlined"
                 startIcon={<Download />}
                 onClick={handleDownloadPDF}
-                sx={{ py: 1.5, fontWeight: 600 }}
+                sx={{
+                  py: 1.5,
+                  fontWeight: 600,
+                  fontFamily: 'Manrope, Arial, sans-serif',
+                  borderRadius: 2,
+                  color: '#0F3978',
+                  borderColor: '#0ED1B1',
+                  background: '#fff',
+                  '&:hover': {
+                    borderColor: '#1B69DE',
+                    background: '#F0F6FF'
+                  }
+                }}
               >
                 PDF İndir
               </Button>
@@ -366,49 +548,86 @@ const TestResultPage: React.FC = () => {
           </Card>
 
           {/* Test Süreci */}
-          <Card elevation={2}>
+          <Card elevation={2} sx={{
+            background: '#F8FBFF',
+            border: '1.5px solid #E0E7EF',
+            boxShadow: '0 2px 12px 0 rgba(30, 89, 174, 0.07)',
+            borderRadius: 4,
+          }}>
             <CardContent>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
-                🔄 Test Süreci
+              <Typography variant="h6" gutterBottom sx={{
+                fontWeight: 600,
+                mb: 3,
+                fontFamily: 'Manrope, Arial, sans-serif',
+                color: '#0F3978'
+              }}>
+                Test Süreci
               </Typography>
-              
               <Stepper orientation="vertical">
                 <Step active={true} completed={true}>
                   <StepLabel>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                    <Typography variant="body2" sx={{
+                      fontWeight: 600,
+                      fontFamily: 'Inter, Arial, sans-serif',
+                      color: '#0F3978'
+                    }}>
                       Test Seçildi
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                      color: '#4787E6',
+                      fontFamily: 'Inter, Arial, sans-serif'
+                    }}>
                       {test?.name}
                     </Typography>
                   </StepLabel>
                 </Step>
                 <Step active={true} completed={true}>
                   <StepLabel>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                    <Typography variant="body2" sx={{
+                      fontWeight: 600,
+                      fontFamily: 'Inter, Arial, sans-serif',
+                      color: '#0F3978'
+                    }}>
                       Veriler Girildi
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                      color: '#4787E6',
+                      fontFamily: 'Inter, Arial, sans-serif'
+                    }}>
                       {Object.keys(testResult.formData).length} alan
                     </Typography>
                   </StepLabel>
                 </Step>
                 <Step active={true} completed={true}>
                   <StepLabel>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                    <Typography variant="body2" sx={{
+                      fontWeight: 600,
+                      fontFamily: 'Inter, Arial, sans-serif',
+                      color: '#0F3978'
+                    }}>
                       Analiz Tamamlandı
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                      color: '#4787E6',
+                      fontFamily: 'Inter, Arial, sans-serif'
+                    }}>
                       Risk skoru: {testResult.score}/100
                     </Typography>
                   </StepLabel>
                 </Step>
                 <Step active={true} completed={true}>
                   <StepLabel>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                    <Typography variant="body2" sx={{
+                      fontWeight: 600,
+                      fontFamily: 'Inter, Arial, sans-serif',
+                      color: '#0F3978'
+                    }}>
                       Rapor Hazırlandı
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                      color: '#4787E6',
+                      fontFamily: 'Inter, Arial, sans-serif'
+                    }}>
                       PDF raporu oluşturuldu
                     </Typography>
                   </StepLabel>
@@ -418,34 +637,78 @@ const TestResultPage: React.FC = () => {
           </Card>
 
           {/* Hızlı İşlemler */}
-          <Card elevation={2} sx={{ mt: 4 }}>
+          <Card elevation={2} sx={{
+            mt: 4,
+            background: '#F8FBFF',
+            border: '1.5px solid #E0E7EF',
+            boxShadow: '0 2px 12px 0 rgba(30, 89, 174, 0.07)',
+            borderRadius: 4,
+          }}>
             <CardContent>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
-                ⚡ Hızlı İşlemler
+              <Typography variant="h6" gutterBottom sx={{
+                fontWeight: 600,
+                mb: 3,
+                fontFamily: 'Manrope, Arial, sans-serif',
+                color: '#0F3978'
+              }}>
+                Hızlı İşlemler
               </Typography>
-              
               <Button
                 fullWidth
                 variant="outlined"
                 onClick={() => navigate('/dashboard')}
-                sx={{ mb: 2 }}
+                sx={{
+                  mb: 2,
+                  borderRadius: 2,
+                  borderColor: '#0ED1B1',
+                  color: '#0F3978',
+                  background: '#fff',
+                  fontFamily: 'Manrope, Arial, sans-serif',
+                  fontWeight: 600,
+                  '&:hover': {
+                    borderColor: '#1B69DE',
+                    background: '#F0F6FF'
+                  }
+                }}
               >
                 Yeni Test Başlat
               </Button>
-              
               <Button
                 fullWidth
                 variant="outlined"
                 onClick={() => navigate('/history')}
-                sx={{ mb: 2 }}
+                sx={{
+                  mb: 2,
+                  borderRadius: 2,
+                  borderColor: '#0ED1B1',
+                  color: '#0F3978',
+                  background: '#fff',
+                  fontFamily: 'Manrope, Arial, sans-serif',
+                  fontWeight: 600,
+                  '&:hover': {
+                    borderColor: '#1B69DE',
+                    background: '#F0F6FF'
+                  }
+                }}
               >
                 Test Geçmişi
               </Button>
-              
               <Button
                 fullWidth
                 variant="outlined"
                 onClick={() => navigate('/about')}
+                sx={{
+                  borderRadius: 2,
+                  borderColor: '#0ED1B1',
+                  color: '#0F3978',
+                  background: '#fff',
+                  fontFamily: 'Manrope, Arial, sans-serif',
+                  fontWeight: 600,
+                  '&:hover': {
+                    borderColor: '#1B69DE',
+                    background: '#F0F6FF'
+                  }
+                }}
               >
                 Hakkında
               </Button>
@@ -478,42 +741,67 @@ const TestResultPage: React.FC = () => {
               maxHeight: '90%',
               overflow: 'auto',
               p: 4,
-              position: 'relative'
+              position: 'relative',
+              background: '#fff',
+              borderRadius: 4,
+              fontFamily: 'Inter, Arial, sans-serif'
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
-              📄 {test?.name} - PDF Raporu
+            <Typography variant="h5" gutterBottom sx={{
+              fontWeight: 600,
+              fontFamily: 'Manrope, Arial, sans-serif',
+              color: '#0F3978'
+            }}>
+              {test?.name} - PDF Raporu
             </Typography>
-            
             <Box sx={{ my: 3 }}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" gutterBottom sx={{
+                fontWeight: 600,
+                fontFamily: 'Manrope, Arial, sans-serif',
+                color: '#0F3978'
+              }}>
                 Test Bilgileri
               </Typography>
-              <Typography variant="body2" paragraph>
+              <Typography variant="body2" paragraph sx={{
+                fontFamily: 'Inter, Arial, sans-serif'
+              }}>
                 <strong>Test Adı:</strong> {test?.name}
               </Typography>
-              <Typography variant="body2" paragraph>
+              <Typography variant="body2" paragraph sx={{
+                fontFamily: 'Inter, Arial, sans-serif'
+              }}>
                 <strong>Test Tarihi:</strong> {new Date(testResult.createdAt).toLocaleDateString('tr-TR')}
               </Typography>
-              <Typography variant="body2" paragraph>
+              <Typography variant="body2" paragraph sx={{
+                fontFamily: 'Inter, Arial, sans-serif'
+              }}>
                 <strong>Risk Seviyesi:</strong> {getRiskText(testResult.risk)}
               </Typography>
-              <Typography variant="body2" paragraph>
+              <Typography variant="body2" paragraph sx={{
+                fontFamily: 'Inter, Arial, sans-serif'
+              }}>
                 <strong>Risk Skoru:</strong> {testResult.score}/100
               </Typography>
             </Box>
-
             <Divider sx={{ my: 3 }} />
-
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom sx={{
+              fontWeight: 600,
+              fontFamily: 'Manrope, Arial, sans-serif',
+              color: '#0F3978'
+            }}>
               Analiz Sonucu
             </Typography>
-            <Typography variant="body1" paragraph>
+            <Typography variant="body1" paragraph sx={{
+              fontFamily: 'Inter, Arial, sans-serif'
+            }}>
               {testResult.message}
             </Typography>
-
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom sx={{
+              fontWeight: 600,
+              fontFamily: 'Manrope, Arial, sans-serif',
+              color: '#0F3978'
+            }}>
               Öneriler
             </Typography>
             <List dense>
@@ -526,12 +814,21 @@ const TestResultPage: React.FC = () => {
                 </ListItem>
               ))}
             </List>
-
             <Box sx={{ mt: 3, textAlign: 'center' }}>
               <Button
                 variant="contained"
                 onClick={() => setShowPDF(false)}
-                sx={{ mr: 2 }}
+                sx={{
+                  mr: 2,
+                  borderRadius: 2,
+                  background: 'linear-gradient(90deg, #0ED1B1 0%, #1B69DE 100%)',
+                  color: '#fff',
+                  fontFamily: 'Manrope, Arial, sans-serif',
+                  fontWeight: 600,
+                  '&:hover': {
+                    background: 'linear-gradient(90deg, #1B69DE 0%, #0ED1B1 100%)',
+                  }
+                }}
               >
                 Kapat
               </Button>
@@ -539,6 +836,18 @@ const TestResultPage: React.FC = () => {
                 variant="outlined"
                 startIcon={<Download />}
                 onClick={handleDownloadPDF}
+                sx={{
+                  borderRadius: 2,
+                  borderColor: '#0ED1B1',
+                  color: '#0F3978',
+                  background: '#fff',
+                  fontFamily: 'Manrope, Arial, sans-serif',
+                  fontWeight: 600,
+                  '&:hover': {
+                    borderColor: '#1B69DE',
+                    background: '#F0F6FF'
+                  }
+                }}
               >
                 İndir
               </Button>
@@ -550,4 +859,4 @@ const TestResultPage: React.FC = () => {
   );
 };
 
-export default TestResultPage; 
+export default TestResultPage;

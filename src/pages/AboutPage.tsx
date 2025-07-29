@@ -17,38 +17,39 @@ import {
   Science,
   Security,
   Speed,
-  Verified
+  Verified,
+  FiberManualRecord
 } from '@mui/icons-material';
 
 const AboutPage: React.FC = () => {
   const features = [
     {
-      icon: <HealthAndSafety color="primary" />,
+      icon: <HealthAndSafety sx={{ color: '#1B69DE', fontSize: 40 }} />,
       title: 'Sağlık Odaklı',
       description: 'Uzman doktorlar tarafından onaylanmış sağlık tarama algoritmaları'
     },
     {
-      icon: <Science color="primary" />,
+      icon: <Science sx={{ color: '#0ED1B1', fontSize: 40 }} />,
       title: 'Yapay Zeka Destekli',
       description: 'Gelişmiş makine öğrenmesi modelleri ile hassas risk analizi'
     },
     {
-      icon: <Speed color="primary" />,
+      icon: <Speed sx={{ color: '#F9A825', fontSize: 40 }} />,
       title: 'Hızlı Sonuç',
       description: 'Saniyeler içinde detaylı sağlık risk değerlendirmesi'
     },
     {
-      icon: <Security color="primary" />,
+      icon: <Security sx={{ color: '#4787E6', fontSize: 40 }} />,
       title: 'Güvenli',
       description: 'Kişisel verileriniz güvenle korunur, şifreli iletişim'
     },
     {
-      icon: <Psychology color="primary" />,
+      icon: <Psychology sx={{ color: '#1B69DE', fontSize: 40 }} />,
       title: 'Kişiselleştirilmiş',
       description: 'Yaş, cinsiyet ve sağlık geçmişinize özel analiz'
     },
     {
-      icon: <Verified color="primary" />,
+      icon: <Verified sx={{ color: '#0ED1B1', fontSize: 40 }} />,
       title: 'Doğrulanmış',
       description: 'Bilimsel araştırmalara dayalı güvenilir sonuçlar'
     }
@@ -73,50 +74,112 @@ const AboutPage: React.FC = () => {
   ];
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container
+      maxWidth="lg"
+      sx={{
+        py: 4,
+        backgroundColor: '#FFFFFF', // Arka plan tamamen beyaz
+        minHeight: '100vh',
+        fontFamily: 'Inter, Arial, sans-serif'
+      }}
+    >
       {/* Hero Section */}
       <Paper
-        elevation={3}
+        elevation={2}
         sx={{
           p: 6,
           mb: 6,
           textAlign: 'center',
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          color: 'white'
+          background: '#F8FBFF',
+          color: '#0F3978',
+          border: '1.5px solid #E0E7EF',
+          boxShadow: '0 4px 24px 0 rgba(30, 89, 174, 0.10)',
+          borderRadius: 4,
         }}
       >
-        <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: 700 }}>
-          🏥 Sağlık Tarama Merkezi Hakkında
+        <Typography
+          variant="h3"
+          component="h1"
+          gutterBottom
+          sx={{
+            fontWeight: 700,
+            fontFamily: 'Manrope, Arial, sans-serif',
+            color: '#0F3978',
+            letterSpacing: '-0.5px',
+            mb: 2,
+            userSelect: 'none',
+          }}
+        >
+          Sağlık Tarama Merkezi Hakkında
         </Typography>
-        <Typography variant="h6" sx={{ opacity: 0.9, mb: 3 }}>
+        <Typography
+          variant="h6"
+          sx={{
+            opacity: 0.9,
+            mb: 3,
+            fontFamily: 'Inter, Arial, sans-serif',
+            color: '#4787E6',
+            fontWeight: 500,
+          }}
+        >
           Yapay zeka teknolojisi ile sağlığınızı koruyun
         </Typography>
-        <Typography variant="body1" sx={{ opacity: 0.8, maxWidth: 800, mx: 'auto' }}>
-          Modern tıp ve yapay zeka teknolojilerini birleştirerek, 
-          kullanıcılarımıza güvenilir ve hızlı sağlık risk analizi sunuyoruz.
+        <Typography
+          variant="body1"
+          sx={{
+            opacity: 0.8,
+            maxWidth: 800,
+            mx: 'auto',
+            fontFamily: 'Inter, Arial, sans-serif',
+            color: '#0F3978',
+          }}
+        >
+          Modern tıp ve yapay zeka teknolojilerini birleştirerek, kullanıcılarımıza güvenilir ve hızlı sağlık risk analizi sunuyoruz.
         </Typography>
       </Paper>
 
       {/* Features */}
-      <Paper elevation={3} sx={{ p: 4, mb: 6 }}>
-        <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, textAlign: 'center', mb: 4 }}>
+      <Paper
+        elevation={2}
+        sx={{
+          p: 4,
+          mb: 6,
+          background: '#F8FBFF',
+          border: '1.5px solid #E0E7EF',
+          boxShadow: '0 4px 24px 0 rgba(30, 89, 174, 0.10)',
+          borderRadius: 4,
+        }}
+      >
+        <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, textAlign: 'center', mb: 4, color: '#0F3978', fontFamily: 'Manrope, Arial, sans-serif' }}>
           Özelliklerimiz
         </Typography>
-        <Box sx={{ 
-          display: 'grid', 
-          gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }, 
-          gap: 4 
+        <Box sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' },
+          gap: 4
         }}>
           {features.map((feature, index) => (
-            <Card elevation={2} key={index} sx={{ height: '100%', p: 2 }}>
-              <CardContent sx={{ textAlign: 'center' }}>
-                <Box sx={{ fontSize: '3rem', mb: 2 }}>
+            <Card
+              elevation={2}
+              key={index}
+              sx={{
+                height: '100%',
+                p: 2,
+                background: '#FFFFFF',
+                border: '1.5px solid #E0E7EF',
+                boxShadow: '0 2px 12px 0 rgba(30, 89, 174, 0.07)',
+                borderRadius: 4,
+                textAlign: 'center'
+              }}
+            >
+              <CardContent>
+                <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
                   {feature.icon}
                 </Box>
-                <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+                <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, color: '#0F3978', fontFamily: 'Manrope, Arial, sans-serif' }}>
                   {feature.title}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{ color: '#4787E6', fontFamily: 'Inter, Arial, sans-serif' }}>
                   {feature.description}
                 </Typography>
               </CardContent>
@@ -126,57 +189,77 @@ const AboutPage: React.FC = () => {
       </Paper>
 
       {/* Mission & Vision */}
-      <Paper elevation={3} sx={{ p: 4, mb: 6 }}>
-        <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, textAlign: 'center', mb: 4 }}>
+      <Paper
+        elevation={2}
+        sx={{
+          p: 4,
+          mb: 6,
+          background: '#F8FBFF',
+          border: '1.5px solid #E0E7EF',
+          boxShadow: '0 4px 24px 0 rgba(30, 89, 174, 0.10)',
+          borderRadius: 4,
+        }}
+      >
+        <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, textAlign: 'center', mb: 4, color: '#0F3978', fontFamily: 'Manrope, Arial, sans-serif' }}>
           Misyonumuz ve Vizyonumuz
         </Typography>
-        <Box sx={{ 
-          display: 'grid', 
-          gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, 
-          gap: 4 
+        <Box sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
+          gap: 4
         }}>
           <Box>
-            <Typography variant="h5" gutterBottom sx={{ fontWeight: 600, color: 'primary.main' }}>
-              🎯 Misyonumuz
+            <Typography variant="h5" gutterBottom sx={{ fontWeight: 600, color: '#1B69DE', fontFamily: 'Manrope, Arial, sans-serif' }}>
+              Misyonumuz
             </Typography>
-            <Typography variant="body1" paragraph>
-              Herkesin kolayca erişebileceği, güvenilir ve bilimsel temelli sağlık risk analizi 
-              hizmeti sunarak, erken teşhis ve koruyucu sağlık hizmetlerine katkıda bulunmak.
+            <Typography variant="body1" paragraph sx={{ color: '#0F3978', fontFamily: 'Inter, Arial, sans-serif' }}>
+              Herkesin kolayca erişebileceği, güvenilir ve bilimsel temelli sağlık risk analizi hizmeti sunarak, erken teşhis ve koruyucu sağlık hizmetlerine katkıda bulunmak.
             </Typography>
             <List>
               <ListItem>
-                <ListItemIcon>•</ListItemIcon>
+                <ListItemIcon sx={{ minWidth: 28 }}>
+                  <FiberManualRecord sx={{ fontSize: 10, color: '#1B69DE' }} />
+                </ListItemIcon>
                 <ListItemText primary="Sağlık okuryazarlığını artırmak" />
               </ListItem>
               <ListItem>
-                <ListItemIcon>•</ListItemIcon>
+                <ListItemIcon sx={{ minWidth: 28 }}>
+                  <FiberManualRecord sx={{ fontSize: 10, color: '#1B69DE' }} />
+                </ListItemIcon>
                 <ListItemText primary="Erken teşhis imkanları sağlamak" />
               </ListItem>
               <ListItem>
-                <ListItemIcon>•</ListItemIcon>
+                <ListItemIcon sx={{ minWidth: 28 }}>
+                  <FiberManualRecord sx={{ fontSize: 10, color: '#1B69DE' }} />
+                </ListItemIcon>
                 <ListItemText primary="Koruyucu sağlık hizmetlerini desteklemek" />
               </ListItem>
             </List>
           </Box>
           <Box>
-            <Typography variant="h5" gutterBottom sx={{ fontWeight: 600, color: 'primary.main' }}>
-              🔮 Vizyonumuz
+            <Typography variant="h5" gutterBottom sx={{ fontWeight: 600, color: '#1B69DE', fontFamily: 'Manrope, Arial, sans-serif' }}>
+              Vizyonumuz
             </Typography>
-            <Typography variant="body1" paragraph>
-              Yapay zeka teknolojilerini kullanarak, kişiselleştirilmiş sağlık hizmetlerinde 
-              öncü olmak ve global sağlık standartlarını yükseltmek.
+            <Typography variant="body1" paragraph sx={{ color: '#0F3978', fontFamily: 'Inter, Arial, sans-serif' }}>
+              Yapay zeka teknolojilerini kullanarak, kişiselleştirilmiş sağlık hizmetlerinde öncü olmak ve global sağlık standartlarını yükseltmek.
             </Typography>
             <List>
               <ListItem>
-                <ListItemIcon>•</ListItemIcon>
+                <ListItemIcon sx={{ minWidth: 28 }}>
+                  <FiberManualRecord sx={{ fontSize: 10, color: '#1B69DE' }} />
+                </ListItemIcon>
                 <ListItemText primary="Yapay zeka ile sağlık teknolojilerinde liderlik" />
               </ListItem>
               <ListItem>
-                <ListItemIcon>•</ListItemIcon>
+                <ListItemIcon sx={{ minWidth: 28 }}>
+                  <FiberManualRecord sx={{ fontSize: 10, color: '#1B69DE' }} />
+                </ListItemIcon>
                 <ListItemText primary="Global sağlık erişimini kolaylaştırmak" />
               </ListItem>
               <ListItem>
-                <ListItemIcon>•</ListItemIcon>
+                <ListItemIcon sx={{ minWidth: 28 }}>
+                  <FiberManualRecord sx={{ fontSize: 10, color: '#1B69DE' }} />
+                </ListItemIcon>
                 <ListItemText primary="Sürekli yenilik ve gelişim" />
               </ListItem>
             </List>
@@ -185,28 +268,48 @@ const AboutPage: React.FC = () => {
       </Paper>
 
       {/* Data Sources */}
-      <Paper elevation={3} sx={{ p: 4, mb: 6 }}>
-        <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, textAlign: 'center', mb: 4 }}>
+      <Paper
+        elevation={2}
+        sx={{
+          p: 4,
+          mb: 6,
+          background: '#F8FBFF',
+          border: '1.5px solid #E0E7EF',
+          boxShadow: '0 4px 24px 0 rgba(30, 89, 174, 0.10)',
+          borderRadius: 4,
+        }}
+      >
+        <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, textAlign: 'center', mb: 4, color: '#0F3978', fontFamily: 'Manrope, Arial, sans-serif' }}>
           Veri Kaynaklarımız
         </Typography>
-        <Typography variant="body1" paragraph sx={{ textAlign: 'center', mb: 4 }}>
+        <Typography variant="body1" paragraph sx={{ textAlign: 'center', mb: 4, color: '#0F3978', fontFamily: 'Inter, Arial, sans-serif' }}>
           Algoritmalarımız, güvenilir ve bilimsel araştırmalara dayalı veri setleri kullanılarak geliştirilmiştir.
         </Typography>
-        <Box sx={{ 
-          display: 'grid', 
-          gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, 
-          gap: 3 
+        <Box sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+          gap: 3
         }}>
           {datasets.map((dataset, index) => (
-            <Card elevation={2} key={index} sx={{ height: '100%' }}>
+            <Card
+              elevation={2}
+              key={index}
+              sx={{
+                height: '100%',
+                background: '#FFFFFF',
+                border: '1.5px solid #E0E7EF',
+                boxShadow: '0 2px 12px 0 rgba(30, 89, 174, 0.07)',
+                borderRadius: 4,
+              }}
+            >
               <CardContent>
-                <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, color: 'primary.main' }}>
+                <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, color: '#1B69DE', fontFamily: 'Manrope, Arial, sans-serif' }}>
                   {dataset.name}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
+                <Typography variant="body2" sx={{ color: '#4787E6', fontFamily: 'Inter, Arial, sans-serif', mb: 1 }}>
                   <strong>Kaynak:</strong> {dataset.source}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{ color: '#0F3978', fontFamily: 'Inter, Arial, sans-serif' }}>
                   {dataset.description}
                 </Typography>
               </CardContent>
@@ -216,23 +319,30 @@ const AboutPage: React.FC = () => {
       </Paper>
 
       {/* Disclaimer */}
-      <Paper elevation={2} sx={{ p: 4, bgcolor: 'grey.50' }}>
-        <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, color: 'warning.main' }}>
-          ⚠️ Önemli Uyarı
+      <Paper
+        elevation={2}
+        sx={{
+          p: 4,
+          background: '#F8FBFF',
+          border: '1.5px solid #E0E7EF',
+          boxShadow: '0 4px 24px 0 rgba(30, 89, 174, 0.10)',
+          borderRadius: 4,
+        }}
+      >
+        <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, color: '#F9A825', fontFamily: 'Manrope, Arial, sans-serif' }}>
+          Önemli Uyarı
         </Typography>
-        <Typography variant="body2" paragraph>
-          Bu uygulama sadece bilgilendirme amaçlıdır ve tıbbi teşhis yerine geçmez. 
-          Sonuçlar profesyonel tıbbi değerlendirme gerektirir. Yüksek risk skoru alırsanız, 
+        <Typography variant="body2" paragraph sx={{ color: '#0F3978', fontFamily: 'Inter, Arial, sans-serif' }}>
+          Bu uygulama sadece bilgilendirme amaçlıdır ve tıbbi teşhis yerine geçmez.
+          Sonuçlar profesyonel tıbbi değerlendirme gerektirir. Yüksek risk skoru alırsanız,
           mutlaka bir sağlık uzmanına başvurunuz.
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          <strong>Geliştirici:</strong> YZTA Web App Team | 
-          <strong> Versiyon:</strong> 1.0.0 | 
-          <strong> Son Güncelleme:</strong> 2024
+        <Typography variant="body2" sx={{ color: '#4787E6', fontFamily: 'Inter, Arial, sans-serif' }}>
+          <strong>Geliştirici:</strong> YZTA Web App Team | <strong>Versiyon:</strong> 1.0.0 | <strong>Son Güncelleme:</strong> 2024
         </Typography>
       </Paper>
     </Container>
   );
 };
 
-export default AboutPage; 
+export default AboutPage;
