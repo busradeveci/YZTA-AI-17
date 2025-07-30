@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Container,
   Typography,
@@ -18,22 +18,32 @@ import {
   Step,
   StepLabel,
   Avatar,
-  TextField
+  TextField,
+  CircularProgress
 } from '@mui/material';
 import {
   CheckCircle,
   Warning,
   Error,
+  FileDownload,
   Visibility,
-  Download,
   ArrowBack,
   Assessment,
-  Send
+  Send,
+  AutoAwesome
 } from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { healthTests, predictTestResult } from '../utils/mockData';
 import { TestResult } from '../types';
-import robotIcon from '../images/robot.png'; // en üste ekleyin
+import { analyzeWithAI } from '../utils/ai';
+import robotIcon from '../images/robot.png';
+
+interface ChatMessage {
+  id: string;
+  type: 'user' | 'ai';
+  content: string;
+  timestamp: Date;
+}
 
 const TestResultPage: React.FC = () => {
   const navigate = useNavigate();
@@ -41,9 +51,43 @@ const TestResultPage: React.FC = () => {
   const [testResult, setTestResult] = useState<TestResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [showPDF, setShowPDF] = useState(false);
-  const [showChat, setShowChat] = useState(false);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [chatInput, setChatInput] = useState('');
-  const [chatHistory, setChatHistory] = useState<string[]>([]);
+  const [isAIResponding, setIsAIResponding] = useState(false);
+  const [aiInitialized, setAiInitialized] = useState(false);
+
+  // AI'ya test sonuçlarını tanıt
+  const initializeAI = useCallback(async (testResult: TestResult) => {
+    if (aiInitialized) return;
+    
+    try {
+      setIsAIResponding(true);
+      
+      const initialPrompt = "Test sonuçlarımı incele ve değerlendir. Sonrasında sorularımı bu verilere göre yanıtla.";
+      const aiResponse = await analyzeWithAI(initialPrompt, testResult, 'initial_analysis');
+      
+      const welcomeMessage: ChatMessage = {
+        id: 'ai-init',
+        type: 'ai',
+        content: `Merhaba! Test sonuçlarınızı inceledim ve hafızama aldım. Size bu veriler ışığında yardımcı olabilirim. ${aiResponse.response}`,
+        timestamp: new Date()
+      };
+      
+      setChatMessages([welcomeMessage]);
+      setAiInitialized(true);
+    } catch (error) {
+      console.error('AI başlatma hatası:', error);
+      const errorMessage: ChatMessage = {
+        id: 'ai-error',
+        type: 'ai',
+        content: 'Test sonuçlarınız analiz edildi. Sorularınızı sorabilirsiniz.',
+        timestamp: new Date()
+      };
+      setChatMessages([errorMessage]);
+    } finally {
+      setIsAIResponding(false);
+    }
+  }, [aiInitialized]);
 
   useEffect(() => {
     const userData = localStorage.getItem('user');
@@ -55,7 +99,10 @@ const TestResultPage: React.FC = () => {
     // Test sonucunu localStorage'dan al veya yeni oluştur
     const savedResult = localStorage.getItem(`testResult_${testId}`);
     if (savedResult) {
-      setTestResult(JSON.parse(savedResult));
+      const result = JSON.parse(savedResult);
+      setTestResult(result);
+      // AI'ya test sonuçlarını tanıt
+      setTimeout(() => initializeAI(result), 1000);
     } else {
       // Mock test sonucu oluştur
       const test = healthTests.find(t => t.id === testId);
@@ -81,19 +128,12 @@ const TestResultPage: React.FC = () => {
         
         localStorage.setItem(`testResult_${testId}`, JSON.stringify(fullResult));
         setTestResult(fullResult);
+        // AI'ya test sonuçlarını tanıt
+        setTimeout(() => initializeAI(fullResult), 1000);
       }
     }
     setLoading(false);
-  }, [testId, navigate]);
-
-  const handleDownloadPDF = () => {
-    // PDF indirme simülasyonu
-    alert('PDF raporu indiriliyor...');
-  };
-
-  const handleViewPDF = () => {
-    setShowPDF(true);
-  };
+  }, [testId, navigate, initializeAI]);
 
   const getRiskColor = (risk: string) => {
     switch (risk) {
@@ -122,15 +162,134 @@ const TestResultPage: React.FC = () => {
     }
   };
 
-  // Chatbot simülasyonu (gerçek API ile değiştirilebilir)
-  const handleChatSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!chatInput.trim()) return;
-    setChatHistory(prev => [...prev, chatInput]);
-    setTimeout(() => {
-      setChatHistory(prev => [...prev, `Rapor güncellendi: ${chatInput} (örnek yanıt)`]);
-    }, 1000);
+  const handleSendMessage = async () => {
+    if (!chatInput.trim() || !testResult) return;
+
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      type: 'user',
+      content: chatInput.trim(),
+      timestamp: new Date()
+    };
+
+    setChatMessages(prev => [...prev, userMessage]);
     setChatInput('');
+    setIsAIResponding(true);
+
+    try {
+      const aiResponse = await analyzeWithAI(chatInput.trim(), testResult);
+      
+      const aiMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: aiResponse.response,
+        timestamp: new Date()
+      };
+
+      setChatMessages(prev => [...prev, aiMessage]);
+    } catch (error) {
+      console.error('AI cevap hatası:', error);
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: 'Üzgünüm, şu anda bir teknik sorun yaşıyorum. Lütfen daha sonra tekrar deneyin.',
+        timestamp: new Date()
+      };
+      setChatMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsAIResponding(false);
+    }
+  };
+
+  const downloadPDF = () => {
+    // PDF içeriğini oluştur
+    const pdfContent = generatePDFContent();
+    
+    // Basit bir şekilde window.print() kullanarak PDF oluştur
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Test Raporu - ${testResult?.testId || 'Test'}</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+              .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px; }
+              .section { margin-bottom: 25px; }
+              .section h3 { color: #333; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+              .chat-message { margin: 10px 0; padding: 10px; border-radius: 5px; }
+              .user-message { background-color: #e3f2fd; text-align: right; }
+              .ai-message { background-color: #f5f5f5; }
+              .message-time { font-size: 12px; color: #666; margin-top: 5px; }
+              .risk-high { color: #d32f2f; }
+              .risk-medium { color: #f57c00; }
+              .risk-low { color: #388e3c; }
+              ul { padding-left: 20px; }
+              li { margin-bottom: 5px; }
+            </style>
+          </head>
+          <body>
+            ${pdfContent}
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
+    }
+  };
+
+  const generatePDFContent = () => {
+    if (!testResult) return '';
+
+    const riskClass = `risk-${testResult.risk}`;
+    
+    return `
+      <div class="header">
+        <h1>Tıbbi Test Raporu</h1>
+        <h2>${testResult.testId}</h2>
+        <p><strong>Test Tarihi:</strong> ${testResult.createdAt instanceof Date 
+          ? testResult.createdAt.toLocaleDateString('tr-TR')
+          : new Date(testResult.createdAt).toLocaleDateString('tr-TR')
+        }</p>
+      </div>
+
+      <div class="section">
+        <h3>Test Sonuçları Özeti</h3>
+        <p><strong>Risk Seviyesi:</strong> <span class="${riskClass}">${getRiskText(testResult.risk)}</span></p>
+        <p><strong>Risk Skoru:</strong> ${testResult.score}/100</p>
+      </div>
+
+      <div class="section">
+        <h3>Doktor Değerlendirmesi</h3>
+        <p>${testResult.message}</p>
+      </div>
+
+      <div class="section">
+        <h3>Öneriler</h3>
+        <ul>
+          ${testResult.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+        </ul>
+      </div>
+
+      ${chatMessages.length > 0 ? `
+        <div class="section">
+          <h3>AI Tıbbi Danışman Sohbeti</h3>
+          ${chatMessages.map(message => `
+            <div class="chat-message ${message.type}-message">
+              <strong>${message.type === 'user' ? 'Hasta' : 'AI Doktor'}:</strong>
+              <p>${message.content}</p>
+              <div class="message-time">${message.timestamp.toLocaleString('tr-TR')}</div>
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
+
+      <div class="section">
+        <h3>Önemli Notlar</h3>
+        <p><em>Bu rapor yalnızca bilgilendirme amaçlıdır. Kesin tanı ve tedavi için bir sağlık profesyoneline danışınız.</em></p>
+        <p><small>Rapor Oluşturma Tarihi: ${new Date().toLocaleString('tr-TR')}</small></p>
+      </div>
+    `;
   };
 
   if (loading) {
@@ -526,8 +685,8 @@ const TestResultPage: React.FC = () => {
               <Button
                 fullWidth
                 variant="outlined"
-                startIcon={<Download />}
-                onClick={handleDownloadPDF}
+                startIcon={<FileDownload />}
+                onClick={() => downloadPDF()}
                 sx={{
                   py: 1.5,
                   fontWeight: 600,
@@ -655,62 +814,40 @@ const TestResultPage: React.FC = () => {
               </Typography>
               <Button
                 fullWidth
-                variant="outlined"
-                onClick={() => navigate('/dashboard')}
+                variant="contained"
+                color="primary"
+                startIcon={<FileDownload />}
+                onClick={() => downloadPDF()}
                 sx={{
                   mb: 2,
                   borderRadius: 2,
-                  borderColor: '#0ED1B1',
-                  color: '#0F3978',
-                  background: '#fff',
                   fontFamily: 'Manrope, Arial, sans-serif',
                   fontWeight: 600,
+                  background: '#1B69DE',
                   '&:hover': {
-                    borderColor: '#1B69DE',
-                    background: '#F0F6FF'
+                    background: '#0F3978'
                   }
                 }}
               >
-                Yeni Test Başlat
+                PDF İndir
               </Button>
               <Button
                 fullWidth
-                variant="outlined"
-                onClick={() => navigate('/history')}
+                variant="contained"
+                color="secondary"
+                startIcon={<Visibility />}
+                onClick={() => setShowPDF(true)}
                 sx={{
-                  mb: 2,
                   borderRadius: 2,
-                  borderColor: '#0ED1B1',
-                  color: '#0F3978',
-                  background: '#fff',
                   fontFamily: 'Manrope, Arial, sans-serif',
                   fontWeight: 600,
+                  background: '#ff6b35',
                   '&:hover': {
-                    borderColor: '#1B69DE',
-                    background: '#F0F6FF'
+                    background: '#ff5722'
                   }
                 }}
               >
-                Test Geçmişi
-              </Button>
-              <Button
-                fullWidth
-                variant="outlined"
-                onClick={() => navigate('/about')}
-                sx={{
-                  borderRadius: 2,
-                  borderColor: '#0ED1B1',
-                  color: '#0F3978',
-                  background: '#fff',
-                  fontFamily: 'Manrope, Arial, sans-serif',
-                  fontWeight: 600,
-                  '&:hover': {
-                    borderColor: '#1B69DE',
-                    background: '#F0F6FF'
-                  }
-                }}
-              >
-                Hakkında
+                PDF Görüntüle
               </Button>
             </CardContent>
           </Card>
@@ -834,8 +971,8 @@ const TestResultPage: React.FC = () => {
               </Button>
               <Button
                 variant="outlined"
-                startIcon={<Download />}
-                onClick={handleDownloadPDF}
+                startIcon={<FileDownload />}
+                onClick={() => downloadPDF()}
                 sx={{
                   borderRadius: 2,
                   borderColor: '#0ED1B1',
