@@ -65,11 +65,6 @@ const AboutPage: React.FC = () => {
       name: 'Breast Cancer Dataset',
       source: 'Kaggle',
       description: 'Meme kanseri risk faktörlerini analiz eden detaylı veri seti'
-    },
-    {
-      name: 'Student Depression Dataset',
-      source: 'Kaggle',
-      description: 'Öğrenci depresyon risk faktörlerini inceleyen araştırma verisi'
     }
   ];
 

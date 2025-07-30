@@ -33,10 +33,9 @@ import {
   AutoAwesome
 } from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { healthTests, predictTestResult } from '../utils/mockData';
+import { healthTests } from '../utils/mockData';
 import { TestResult } from '../types';
 import { analyzeWithAI } from '../utils/ai';
-import robotIcon from '../images/robot.png';
 
 interface ChatMessage {
   id: string;
@@ -47,7 +46,7 @@ interface ChatMessage {
 
 const TestResultPage: React.FC = () => {
   const navigate = useNavigate();
-  const { testId } = useParams<{ testId: string }>();
+  const { id } = useParams<{ id: string }>();
   const [testResult, setTestResult] = useState<TestResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [showPDF, setShowPDF] = useState(false);
@@ -90,50 +89,58 @@ const TestResultPage: React.FC = () => {
   }, [aiInitialized]);
 
   useEffect(() => {
+    const loadTestResult = (resultId: string) => {
+      try {
+        // Yeni sistem - testResults array'inde ara
+        const savedResults = JSON.parse(localStorage.getItem('testResults') || '[]');
+        const result = savedResults.find((r: TestResult) => r.id === resultId);
+        
+        if (result) {
+          // LocalStorage'dan gelen veriyi doğru formata dönüştür
+          const formattedResult: TestResult = {
+            ...result,
+            patientId: result.patientId || 'patient-1',
+            formData: result.data || result.formData || {},
+            createdAt: new Date(result.createdAt)
+          };
+          setTestResult(formattedResult);
+          
+          // AI'ya test sonuçlarını tanıt
+          setTimeout(() => initializeAI(formattedResult), 1000);
+        } else {
+          // Eski sistem de kontrol et
+          const oldResult = localStorage.getItem(`testResult_${resultId}`);
+          if (oldResult) {
+            const parsedResult = JSON.parse(oldResult);
+            setTestResult(parsedResult);
+            setTimeout(() => initializeAI(parsedResult), 1000);
+          } else {
+            // Test sonucu bulunamazsa dashboard'a yönlendir
+            console.log('Test sonucu bulunamadı, dashboard\'a yönlendiriliyor...');
+            navigate('/dashboard');
+          }
+        }
+      } catch (error) {
+        console.error('Test sonucu yüklenirken hata:', error);
+        navigate('/dashboard');
+      }
+      setLoading(false);
+    };
+
     const userData = localStorage.getItem('user');
     if (!userData) {
       navigate('/login');
       return;
     }
 
-    // Test sonucunu localStorage'dan al veya yeni oluştur
-    const savedResult = localStorage.getItem(`testResult_${testId}`);
-    if (savedResult) {
-      const result = JSON.parse(savedResult);
-      setTestResult(result);
-      // AI'ya test sonuçlarını tanıt
-      setTimeout(() => initializeAI(result), 1000);
+    if (id) {
+      // id parametresini kullan
+      loadTestResult(id);
     } else {
-      // Mock test sonucu oluştur
-      const test = healthTests.find(t => t.id === testId);
-      if (test) {
-        const mockFormData: Record<string, any> = {};
-        test.fields.forEach(field => {
-          if (field.type === 'number') {
-            mockFormData[field.name] = Math.floor(Math.random() * 50) + 20;
-          } else if (field.type === 'select') {
-            mockFormData[field.name] = field.options?.[0] || '';
-          } else if (field.type === 'checkbox') {
-            mockFormData[field.name] = Math.random() > 0.5;
-          }
-        });
-
-        const result = predictTestResult(testId!, mockFormData);
-        const fullResult: TestResult = {
-          id: Date.now().toString(),
-          patientId: JSON.parse(userData).id,
-          ...result,
-          createdAt: new Date()
-        };
-        
-        localStorage.setItem(`testResult_${testId}`, JSON.stringify(fullResult));
-        setTestResult(fullResult);
-        // AI'ya test sonuçlarını tanıt
-        setTimeout(() => initializeAI(fullResult), 1000);
-      }
+      console.log('Test ID bulunamadı');
+      navigate('/dashboard');
     }
-    setLoading(false);
-  }, [testId, navigate, initializeAI]);
+  }, [id, navigate, initializeAI]);
 
   const getRiskColor = (risk: string) => {
     switch (risk) {
@@ -311,7 +318,7 @@ const TestResultPage: React.FC = () => {
     );
   }
 
-  const test = healthTests.find(t => t.id === testResult.testId);
+  const test = healthTests.find(t => t.id === (testResult?.testId || id));
 
   return (
     <Container maxWidth="lg" sx={{ py: 4, backgroundColor: '#FFFFFF', minHeight: '100vh', fontFamily: 'Inter, Arial, sans-serif' }}>
@@ -540,97 +547,150 @@ const TestResultPage: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Raporu Geliştir Butonu */}
-          {!showChat && (
-            <Button
-              variant="outlined"
-              color="primary"
-              fullWidth
-              sx={{
-                mt: 3,
-                fontWeight: 600,
-                fontFamily: 'Manrope, Arial, sans-serif',
-                borderRadius: 2,
-                borderColor: '#0ED1B1',
-                color: '#0F3978',
-                background: '#fff',
-                '&:hover': {
-                  borderColor: '#1B69DE',
-                  background: '#F0F6FF'
-                }
-              }}
-              onClick={() => setShowChat(true)}
-            >
-              Raporu Geliştir (Chat ile)
-            </Button>
-          )}
-          {/* Chat Alanı */}
-          {showChat && (
-            <Box sx={{ mt: 3 }}>
-              <form onSubmit={handleChatSubmit} style={{ display: 'flex', gap: 8 }}>
+          {/* AI Tıbbi Danışman */}
+          <Card elevation={3} sx={{
+            mt: 3,
+            background: '#F8FBFF',
+            border: '1.5px solid #E0E7EF',
+            boxShadow: '0 4px 24px 0 rgba(30, 89, 174, 0.10)',
+            borderRadius: 4,
+          }}>
+            <CardContent>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                <AutoAwesome sx={{ fontSize: 32, color: 'primary.main', mr: 2 }} />
+                <Typography variant="h6" sx={{ 
+                  fontWeight: 600,
+                  fontFamily: 'Manrope, Arial, sans-serif',
+                  color: '#0F3978'
+                }}>
+                  AI Tıbbi Danışman
+                </Typography>
+              </Box>
+
+              {/* Chat Mesajları */}
+              <Box
+                sx={{
+                  minHeight: 300,
+                  maxHeight: 500,
+                  overflowY: 'auto',
+                  mb: 3,
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  borderRadius: 2,
+                  p: 3,
+                  backgroundColor: 'grey.50'
+                }}
+              >
+                {chatMessages.length === 0 ? (
+                  <Box sx={{ textAlign: 'center', py: 6 }}>
+                    <AutoAwesome sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />
+                    <Typography variant="h6" gutterBottom>
+                      AI Tıbbi Danışmanınız Test Sonuçlarınızı İnceliyor...
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {isAIResponding ? 'Test verileriniz analiz ediliyor...' : 'Test sonuçlarınız hazır. Sorularınızı sorabilirsiniz.'}
+                    </Typography>
+                  </Box>
+                ) : (
+                  chatMessages.map((message) => (
+                    <Box
+                      key={message.id}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: message.type === 'user' ? 'flex-end' : 'flex-start',
+                        mb: 3
+                      }}
+                    >
+                      <Paper
+                        elevation={2}
+                        sx={{
+                          p: 3,
+                          maxWidth: '80%',
+                          backgroundColor: message.type === 'user' ? 'primary.main' : 'white',
+                          color: message.type === 'user' ? 'white' : 'text.primary',
+                          borderRadius: 3
+                        }}
+                      >
+                        <Typography variant="body1" sx={{ lineHeight: 1.6 }}>
+                          {message.content}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            display: 'block',
+                            mt: 1,
+                            opacity: 0.7
+                          }}
+                        >
+                          {message.timestamp.toLocaleTimeString('tr-TR', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </Typography>
+                      </Paper>
+                    </Box>
+                  ))
+                )}
+
+                {isAIResponding && (
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-start', mb: 3 }}>
+                    <Paper
+                      elevation={2}
+                      sx={{
+                        p: 3,
+                        backgroundColor: 'white',
+                        borderRadius: 3
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <CircularProgress size={16} />
+                        <Typography variant="body1" color="text.secondary">
+                          AI cevap yazıyor...
+                        </Typography>
+                      </Box>
+                    </Paper>
+                  </Box>
+                )}
+              </Box>
+
+              {/* Chat Input */}
+              <Box sx={{ display: 'flex', gap: 2 }}>
                 <TextField
                   fullWidth
-                  placeholder="Raporu geliştirmek için bir şey yazın..."
+                  variant="outlined"
+                  placeholder="Örnek: 'Bu sonuçlara göre ne yapmalıyım?', 'Risk faktörlerim neler?', 'Kolesterol değerim normal mi?'"
                   value={chatInput}
-                  onChange={e => setChatInput(e.target.value)}
-                  size="small"
-                  sx={{
-                    fontFamily: 'Inter, Arial, sans-serif',
-                    background: '#fff',
-                    borderRadius: 2
+                  onChange={(e) => setChatInput(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage();
+                    }
                   }}
-                  InputProps={{
-                    style: {
-                      fontFamily: 'Inter, Arial, sans-serif',
-                      fontSize: '12px',
-                    },
+                  multiline
+                  maxRows={3}
+                  sx={{ 
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 3
+                    }
                   }}
                 />
                 <Button
-                  type="submit"
                   variant="contained"
-                  color="primary"
-                  disabled={!chatInput.trim()}
-                  sx={{
-                    minWidth: 48,
-                    borderRadius: 2,
-                    background: 'linear-gradient(90deg, #0ED1B1 0%, #1B69DE 100%)',
-                    color: '#fff',
-                    fontFamily: 'Manrope, Arial, sans-serif',
-                    fontWeight: 600,
-                    '&:hover': {
-                      background: 'linear-gradient(90deg, #1B69DE 0%, #0ED1B1 100%)',
-                    }
+                  onClick={handleSendMessage}
+                  disabled={!chatInput.trim() || isAIResponding}
+                  sx={{ 
+                    minWidth: 60,
+                    borderRadius: 3,
+                    height: 'fit-content',
+                    alignSelf: 'flex-end'
                   }}
                 >
                   <Send />
                 </Button>
-              </form>
-              {/* Chat geçmişi */}
-              {chatHistory.length > 0 && (
-                <Box sx={{ mt: 3 }}>
-                  <Divider sx={{ mb: 2 }} />
-                  <Typography variant="h6" sx={{
-                    fontWeight: 600,
-                    mb: 1,
-                    fontFamily: 'Manrope, Arial, sans-serif',
-                    color: '#0F3978'
-                  }}>
-                    Rapor Geliştirme Geçmişi
-                  </Typography>
-                  {chatHistory.map((msg, idx) => (
-                    <Alert key={idx} severity={idx % 2 === 0 ? 'info' : 'success'} sx={{
-                      mb: 1,
-                      fontFamily: 'Inter, Arial, sans-serif',
-                      borderRadius: 2
-                    }}>
-                      {msg}
-                    </Alert>
-                  ))}
-                </Box>
-              )}
-            </Box>
-          )}
+              </Box>
+            </CardContent>
+          </Card>
         </Box>
 
         {/* Sağ Taraf - PDF ve İşlemler */}
@@ -665,7 +725,7 @@ const TestResultPage: React.FC = () => {
                 fullWidth
                 variant="contained"
                 startIcon={<Visibility />}
-                onClick={handleViewPDF}
+                onClick={() => setShowPDF(true)}
                 sx={{
                   mb: 2,
                   py: 1.5,
@@ -951,6 +1011,41 @@ const TestResultPage: React.FC = () => {
                 </ListItem>
               ))}
             </List>
+            
+            {/* AI Tıbbi Danışman Sohbetleri */}
+            {chatMessages.length > 0 && (
+              <>
+                <Divider sx={{ my: 3 }} />
+                <Typography variant="h6" gutterBottom sx={{
+                  fontWeight: 600,
+                  fontFamily: 'Manrope, Arial, sans-serif',
+                  color: '#0F3978'
+                }}>
+                  AI Tıbbi Danışman Sohbeti
+                </Typography>
+                <Box sx={{ maxHeight: 300, overflowY: 'auto', border: '1px solid #e0e0e0', borderRadius: 1, p: 2 }}>
+                  {chatMessages.map((message) => (
+                    <Box key={message.id} sx={{ mb: 2 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: message.type === 'user' ? 'primary.main' : 'secondary.main' }}>
+                        {message.type === 'user' ? 'Hasta:' : 'AI Doktor:'}
+                      </Typography>
+                      <Typography variant="body2" sx={{ ml: 1, mb: 1 }}>
+                        {message.content}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+                        {message.timestamp.toLocaleString('tr-TR')}
+                      </Typography>
+                      {message.id !== chatMessages[chatMessages.length - 1].id && <Divider sx={{ mt: 1 }} />}
+                    </Box>
+                  ))}
+                </Box>
+              </>
+            )}
+            
+            <Divider sx={{ my: 3 }} />
+            <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+              Bu rapor yalnızca bilgilendirme amaçlıdır. Kesin tanı ve tedavi için bir sağlık profesyoneline danışınız.
+            </Typography>
             <Box sx={{ mt: 3, textAlign: 'center' }}>
               <Button
                 variant="contained"

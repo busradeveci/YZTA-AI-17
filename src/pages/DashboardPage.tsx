@@ -32,8 +32,6 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { healthTests, mockDashboardStats, mockTestResults, mockChatMessages, chatbotResponses } from '../utils/mockData';
 import { ChatMessage } from '../types';
-import dashboardIcon from '../images/dashboard.png'; // Eğer bir dashboard ikonun varsa ekleyebilirsin
-import logo from '../images/login.png';
 import robotIcon from '../images/robot.png'; // en üstte ekleyin
 
 const DashboardPage: React.FC = () => {

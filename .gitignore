@@ -1,15 +1,10 @@
 # Bağımlılıklar
-package-lock.json
-/node_modules
+node_modules/
 /.pnp
 .pnp.js
 .yarn/install-state.gz
 
-# Next.js derleme çıktıları
-/.next/
-/out/
-
-# Üretim yapıları
+# React derleme çıktıları
 /build
 
 # Test raporları ve önbellekleri
@@ -17,6 +12,7 @@ package-lock.json
 .jest/cache
 
 # Ortam değişkenleri - Asla hassas bilgileri repoya göndermeyin!
+.env
 .env.local
 .env.development.local
 .env.test.local
@@ -28,19 +24,21 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Editör ve işletim sistemi dosyaları
+# macOS ve Windows
 .DS_Store
-*.pem
-.vscode/
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
-# Vercel dağıtım dosyaları
-.vercel
-
-# TypeScript derleme bilgileri
-*.tsbuildinfo
-next-env.d.ts
-
+# Editör dosyaları
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 # Python
 __pycache__/
 *.py[cod]
@@ -64,91 +62,17 @@ wheels/
 *.egg
 MANIFEST
 
-# PyInstaller
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-.hypothesis/
-.pytest_cache/
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-.python-version
-
-# celery beat schedule file
-celerybeat-schedule
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
+# Python virtual environments
 .env
-.venv
+.venv/
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
 
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
+# Jupyter Notebook
+.ipynb_checkpoints
 
 # Machine Learning models (büyük dosyalar)
 *.pkl
@@ -156,11 +80,12 @@ dmypy.json
 *.h5
 *.hdf5
 
-# Data files (büyük veri dosyaları)
-*.csv
-*.json
-*.parquet
-*.feather
+# Data files (sadece sample data hariç)
+data/*.csv
+data/*.json
+data/*.parquet
+data/*.feather
+!data/sample_*.csv
 
 # Logs
 *.log

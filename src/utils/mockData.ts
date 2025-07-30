@@ -4,7 +4,6 @@ import { HealthTest, TestResult, User, Patient, Doctor, ChatMessage, DashboardSt
 import heartIcon from '../images/Heart.png';
 import cancerIcon from '../images/cancer.png';
 import fetalIcon from '../images/fetal.png';
-import depressionIcon from '../images/depression.png';
 
 // Mock kullanıcılar
 export const mockUsers: User[] = [
@@ -80,24 +79,6 @@ export const healthTests: HealthTest[] = [
       { name: 'earlyMenarche', label: 'Erken Adet Başlangıcı (<12 yaş)', type: 'checkbox', required: false },
       { name: 'lateMenopause', label: 'Geç Menopoz (>55 yaş)', type: 'checkbox', required: false }
     ]
-  },
-  {
-    id: 'depression',
-    name: 'Depresyon Risk Değerlendirmesi',
-    description: 'Depresyon risk faktörlerini analiz eder ve ruh sağlığı durumunu değerlendirir.',
-    icon: depressionIcon, // PNG yolu
-    category: 'psychology',
-    fields: [
-      { name: 'age', label: 'Yaş', type: 'number', required: true, validation: { min: 12, max: 100 } },
-      { name: 'gender', label: 'Cinsiyet', type: 'select', required: true, options: ['Erkek', 'Kadın', 'Diğer'] },
-      { name: 'previousDepression', label: 'Önceki Depresyon Geçmişi', type: 'checkbox', required: false },
-      { name: 'familyHistory', label: 'Aile Geçmişi', type: 'checkbox', required: false },
-      { name: 'stressLevel', label: 'Stres Seviyesi', type: 'select', required: true, options: ['Düşük', 'Orta', 'Yüksek'] },
-      { name: 'socialSupport', label: 'Sosyal Destek', type: 'select', required: true, options: ['Yok', 'Az', 'Orta', 'Yüksek'] },
-      { name: 'sleepProblems', label: 'Uyku Problemleri', type: 'checkbox', required: false },
-      { name: 'appetiteChanges', label: 'İştah Değişiklikleri', type: 'checkbox', required: false },
-      { name: 'suicidalThoughts', label: 'İntihar Düşünceleri', type: 'checkbox', required: false }
-    ]
   }
 ];
 
@@ -130,32 +111,6 @@ export const mockTestResults: TestResult[] = [
     ],
     createdAt: new Date('2024-01-20'),
     pdfUrl: '/reports/heart-disease-1.pdf'
-  },
-  {
-    id: '2',
-    testId: 'depression',
-    patientId: '1',
-    formData: {
-      age: 45,
-      gender: 'Erkek',
-      previousDepression: false,
-      familyHistory: false,
-      stressLevel: 'Orta',
-      socialSupport: 'Orta',
-      sleepProblems: true,
-      appetiteChanges: false,
-      suicidalThoughts: false
-    },
-    risk: 'low',
-    score: 25.0,
-    message: 'Düşük depresyon riski. Ruh sağlığınız iyi görünüyor.',
-    recommendations: [
-      'Sosyal bağlantılarınızı güçlü tutun',
-      'Düzenli egzersiz yapın',
-      'Stres yönetimi tekniklerini öğrenin'
-    ],
-    createdAt: new Date('2024-01-18'),
-    pdfUrl: '/reports/depression-2.pdf'
   }
 ];
 
@@ -180,7 +135,7 @@ export const mockChatMessages: ChatMessage[] = [
 // Chatbot yanıtları
 export const chatbotResponses = {
   'yeni test': {
-    message: 'Hangi testi eklemek istiyorsunuz? Mevcut testlerimiz: Kalp Hastalığı, Fetal Sağlık, Meme Kanseri, Depresyon.',
+    message: 'Hangi testi eklemek istiyorsunuz? Mevcut testlerimiz: Kalp Hastalığı, Fetal Sağlık, Meme Kanseri.',
     action: 'add_test'
   },
   'tansiyon': {
@@ -316,42 +271,6 @@ export const predictTestResult = (testId: string, formData: Record<string, any>)
           'En kısa sürede bir onkologa başvurun',
           'Genetik test yaptırmayı düşünün',
           'Sıkı takip programına katılın'
-        ];
-      }
-      break;
-
-    case 'depression':
-      if (formData.previousDepression) baseScore += 35;
-      if (formData.familyHistory) baseScore += 25;
-      if (formData.stressLevel === 'Yüksek') baseScore += 20;
-      if (formData.socialSupport === 'Yok') baseScore += 15;
-      if (formData.sleepProblems) baseScore += 15;
-      if (formData.appetiteChanges) baseScore += 10;
-      if (formData.suicidalThoughts) baseScore += 50;
-
-      if (baseScore < 30) {
-        risk = 'low';
-        message = 'Düşük depresyon riski. Ruh sağlığınız iyi görünüyor.';
-        recommendations = [
-          'Sosyal bağlantılarınızı güçlü tutun',
-          'Düzenli egzersiz yapın',
-          'Stres yönetimi tekniklerini öğrenin'
-        ];
-      } else if (baseScore < 70) {
-        risk = 'medium';
-        message = 'Orta depresyon riski. Dikkatli olmanız gereken durumlar var.';
-        recommendations = [
-          'Bir psikolog ile görüşmeyi düşünün',
-          'Stres yönetimi tekniklerini uygulayın',
-          'Sosyal destek ağınızı genişletin'
-        ];
-      } else {
-        risk = 'high';
-        message = 'Yüksek depresyon riski. Profesyonel yardım almanız önerilir.';
-        recommendations = [
-          'En kısa sürede bir psikiyatriste başvurun',
-          'Acil durum hatlarını öğrenin',
-          'Güvenilir kişilerle duygularınızı paylaşın'
         ];
       }
       break;

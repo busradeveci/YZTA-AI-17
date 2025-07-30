@@ -45,18 +45,6 @@ const HistoryPage: React.FC = () => {
         recommendations: ['Doktor kontrolü', 'Mamografi']
       },
       formData: { age: 45, gender: 'Kadın' }
-    },
-    {
-      id: '3',
-      testType: 'Depresyon Risk Değerlendirmesi',
-      date: '2024-01-05',
-      result: {
-        risk: 'high',
-        score: 78,
-        message: 'Yüksek risk seviyesi',
-        recommendations: ['Psikolog görüşmesi', 'Acil değerlendirme']
-      },
-      formData: { age: 32, stressLevel: 'Yüksek' }
     }
   ];
 

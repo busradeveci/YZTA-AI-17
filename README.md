@@ -19,8 +19,15 @@ MedOps Trello Backlog Board
 - Backlog, sprint raporlarındaki ekran görüntüleriyle belgelendi.
 
 ## Ürün Açıklaması
-MediRisk uygulaması; kronik böbrek hastalığı, fetal sağlık ve meme kanseri gibi çeşitli sağlık durumları için farklı veri setlerini kullanarak, kullanıcıların kendi sağlık risklerini değerlendirmelerine olanak tanıyan bir web platformudur.  
+MediRisk uygulaması; kardiyovasküler hastalık, fetal sağlık ve meme kanseri gibi çeşitli sağlık durumları için farklı veri setlerini kullanarak, kullanıcıların kendi sağlık risklerini değerlendirmelerine olanak tanıyan bir web platformudur.  
 Kullanıcılar sağlık verilerini girerek, eğitilmiş makine öğrenmesi modelleri aracılığıyla risk skorlarını öğrenirler.
+
+## Ürün Özellikleri
+- **Üç Ana Test Türü:** Kalp hastalığı, fetal sağlık ve meme kanseri risk değerlendirmesi
+- **AI Tıbbi Danışman:** Google Gemini API entegrasyonu ile akıllı sohbet desteği
+- **PDF Raporlama:** Test sonuçlarını PDF formatında indirme ve görüntüleme
+- **Kullanıcı Dostu Arayüz:** Modern Material-UI tasarımı
+- **Gerçek Zamanlı Analiz:** Hızlı test sonuçları ve öneriler
 
 ## Gereksinimler
 
@@ -55,12 +62,9 @@ google-generativeai>=0.3.0
 {
   "@emotion/react": "^11.14.0",
   "@emotion/styled": "^11.14.1",
+  "@google/generative-ai": "^0.24.1",
   "@mui/icons-material": "^7.2.0",
   "@mui/material": "^7.2.0",
-  "@types/jspdf": "^1.3.3",
-  "axios": "^0.27.2",
-  "html2canvas": "^1.4.1",
-  "jspdf": "^3.0.1",
   "react": "^18.2.0",
   "react-dom": "^18.2.0",
   "react-router-dom": "^6.3.0",
