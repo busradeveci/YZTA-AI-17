@@ -250,78 +250,6 @@ def create_sample_breast_cancer_model():
     
     return model, accuracy
 
-def create_sample_depression_model():
-    """Örnek depresyon modeli oluştur"""
-    print("Depresyon modeli oluşturuluyor...")
-    
-    # Örnek veri oluştur
-    np.random.seed(42)
-    n_samples = 500
-    
-    # Özellikler
-    age = np.random.normal(35, 12, n_samples).astype(int)
-    sleep_hours = np.random.normal(7, 2, n_samples)
-    stress_level = np.random.choice([1, 2, 3], n_samples, p=[0.4, 0.4, 0.2])
-    social_support = np.random.choice([0, 1, 2, 3], n_samples, p=[0.1, 0.2, 0.4, 0.3])
-    previous_depression = np.random.choice([0, 1], n_samples, p=[0.7, 0.3])
-    family_history = np.random.choice([0, 1], n_samples, p=[0.8, 0.2])
-    anxiety = np.random.choice([0, 1], n_samples, p=[0.6, 0.4])
-    insomnia = np.random.choice([0, 1], n_samples, p=[0.7, 0.3])
-    
-    # Veri seti oluştur
-    data = pd.DataFrame({
-        'age': age,
-        'sleepHours': sleep_hours,
-        'stressLevel': stress_level,
-        'socialSupport': social_support,
-        'previousDepression': previous_depression,
-        'familyHistory': family_history,
-        'anxiety': anxiety,
-        'insomnia': insomnia
-    })
-    
-    # Hedef değişken oluştur
-    risk_score = (
-        (age < 25).astype(int) * 1 +
-        (sleep_hours < 6).astype(int) * 2 +
-        (stress_level == 3).astype(int) * 2 +
-        (social_support < 2).astype(int) * 2 +
-        (previous_depression == 1).astype(int) * 3 +
-        (family_history == 1).astype(int) * 2 +
-        (anxiety == 1).astype(int) * 2 +
-        (insomnia == 1).astype(int) * 1
-    )
-    
-    target = (risk_score > 6).astype(int)
-    
-    # Veriyi böl
-    X_train, X_test, y_train, y_test = train_test_split(
-        data, target, test_size=0.2, random_state=42, stratify=target
-    )
-    
-    # Model eğit
-    model = RandomForestClassifier(
-        n_estimators=100,
-        max_depth=8,
-        random_state=42
-    )
-    
-    model.fit(X_train, y_train)
-    
-    # Model performansını değerlendir
-    y_pred = model.predict(X_test)
-    accuracy = accuracy_score(y_test, y_pred)
-    
-    print(f"Model doğruluğu: {accuracy:.3f}")
-    
-    # Modeli kaydet
-    model_path = "models/depression.pkl"
-    joblib.dump(model, model_path)
-    
-    print(f"Model kaydedildi: {model_path}")
-    
-    return model, accuracy
-
 def main():
     """Ana fonksiyon"""
     print("🚀 Örnek modeller oluşturuluyor...")
@@ -344,22 +272,17 @@ def main():
         models['breast_cancer'], acc3 = create_sample_breast_cancer_model()
         print()
         
-        models['depression'], acc4 = create_sample_depression_model()
-        print()
-        
         print("=" * 50)
         print("✅ Tüm modeller başarıyla oluşturuldu!")
         print(f"📊 Model Performansları:")
         print(f"   • Kalp Hastalığı: {acc1:.3f}")
         print(f"   • Fetal Sağlık: {acc2:.3f}")
         print(f"   • Meme Kanseri: {acc3:.3f}")
-        print(f"   • Depresyon: {acc4:.3f}")
         print()
         print("📁 Modeller 'models/' klasörüne kaydedildi:")
         print("   • models/heart_disease.pkl")
         print("   • models/fetal_health.pkl")
         print("   • models/breast_cancer.pkl")
-        print("   • models/depression.pkl")
         print()
         print("🎯 Bu modelleri API'de kullanabilirsiniz!")
         

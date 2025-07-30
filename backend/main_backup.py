@@ -899,40 +899,334 @@ async def enhance_report(request: ReportEnhanceRequest):
 def create_fallback_response(domain: str, user_prompt: str, patient_data: Dict[str, Any], prediction_result: Dict[str, Any], is_api_overloaded: bool = False, is_connection_error: bool = False) -> str:
     """AI sisteminin yoğun olduğu durumlarda kullanılacak fallback cevaplar."""
     
+    risk_level = prediction_result.get('risk', 'unknown')
     risk_score = prediction_result.get('score', 0)
     
     # Durum açıklaması
+    status_message = ""
     if is_api_overloaded:
-        status_msg = "🤖 AI asistanımız şu anda çok yoğun. Size genel tıbbi bilgiler sunuyoruz."
-    elif is_connection_error:
-        status_msg = "🔄 Bağlantı sorunu nedeniyle genel tıbbi bilgiler sunuyoruz."
-    else:
-        status_msg = "ℹ️ Genel tıbbi bilgiler"
-        
-    # Basit HTML response
-    response = f"""
-<div style="background-color: #fff3cd; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
-    <h4>{status_msg}</h4>
-    <p>30 saniye sonra tekrar deneyebilir veya aşağıdaki bilgileri değerlendirebilirsiniz.</p>
+        status_message = """
+<div style="background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+    <h4 style="color: #856404; margin: 0 0 8px 0;">🤖 AI Asistanımız Geçici Olarak Yoğun</h4>
+    <p style="color: #856404; margin: 0;">Şu anda çok fazla kullanıcı sistemimize erişiyor. Size aşağıda genel tıbbi bilgiler sunduk. 30 saniye sonra tekrar deneyebilir veya bu bilgileri değerlendirebilirsiniz.</p>
 </div>
-
-<h3>� Test Sonucu</h3>
-<p>Risk skorunuz: <strong>{risk_score}/100</strong></p>
-<p>Sorunuz: <em>"{user_prompt}"</em></p>
-
-<h4>� Önemli Bilgiler</h4>
-<ul>
-<li>Bu skor sadece bir tahmindir, kesin tanı değildir</li>
-<li>Mutlaka bir doktora başvurun</li>
-<li>Düzenli sağlık kontrolleri önemlidir</li>
-<li>Sağlıklı yaşam tarzı benimseyin</li>
-</ul>
-
-<div style="background-color: #e8f5e8; padding: 15px; margin-top: 20px; border-radius: 8px;">
-    <h4>🎯 Sonuç</h4>
-    <p><strong>Bu bilgiler genel rehberlik amaçlıdır.</strong> Kesin tanı ve tedavi için sağlık uzmanına başvurun.</p>
-    <p style="text-align: center; margin-top: 15px;">💝 <strong>Medirisk AI</strong> - Sağlığınız önceliğimiz</p>
+"""
+    elif is_connection_error:
+        status_message = """
+<div style="background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+    <h4 style="color: #721c24; margin: 0 0 8px 0;">🔄 Bağlantı Sorunu</h4>
+    <p style="color: #721c24; margin: 0;">AI sistemimize şu anda erişim sağlanamıyor. Aşağıda temel tıbbi bilgileri bulabilirsiniz. Lütfen daha sonra tekrar deneyiniz.</p>
 </div>
 """
     
-    return response 
+    # Genel tıbbi bilgilendirme
+    base_response = f"""
+{status_message}
+<h3>📋 Test Sonucu Değerlendirmesi</h3>
+<p>Test sonucunuza göre risk skorunuz <strong>{risk_score}/100</strong> olarak hesaplanmıştır.</p>
+<p><strong>⚠️ Önemli:</strong> Bu skor sadece bir tahmindir ve kesin tanı yerine geçmez.</p>
+"""
+    
+    # Domain'e özel fallback cevaplar
+    if domain == "breast_cancer":
+        specific_response = f"""
+    # Domain'e özel fallback cevaplar
+    if domain == "breast_cancer":
+        specific_response = f"""
+<h4>🔍 Meme Kanseri Tarama Sonucu</h4>
+<div style="background-color: #e3f2fd; padding: 15px; border-radius: 8px; margin: 10px 0;">
+    <p><strong>Sorunuz:</strong> <em>"{user_prompt}"</em></p>
+</div>
+
+<h4>📊 Risk Değerlendirmesi Hakkında</h4>
+<ul>
+<li><strong>🎯 Bu bir risk hesaplamasıdır:</strong> Kanser tanısı değil, dikkatli takip önerisidir</li>
+<li><strong>👨‍⚕️ Doktor görüşü şart:</strong> Mutlaka bir hekime başvurun</li>
+<li><strong>🔬 Ek testler:</strong> Ultrason, mammografi gibi görüntüleme önerilir</li>
+<li><strong>🏥 Erken tespit:</strong> En önemli koruyucu faktördür</li>
+</ul>
+
+<h4>👨‍👩‍👧‍👦 Aile ile Konuşma Rehberi</h4>
+<div style="background-color: #f3e5f5; padding: 15px; border-radius: 8px;">
+<ul>
+<li><strong>Sakin kalın:</strong> "Test sonuçları sadece takip gerektiriyor" şeklinde açıklayın</li>
+<li><strong>Destekleyici olun:</strong> "Beraber doktora gidelim" yaklaşımı benimseyin</li>
+<li><strong>Bilgi verin:</strong> Erken tespitin önemini vurgulayın</li>
+<li><strong>Umutlu olun:</strong> Modern tıpla başarı oranları çok yüksek</li>
+</ul>
+</div>
+
+<h4>🎯 Önleyici Öneriler</h4>
+<ul>
+<li>Düzenli self-muayene öğrenin</li>
+<li>Sağlıklı kilo korunun</li>
+<li>Alkol tüketimini sınırlayın</li>
+<li>Düzenli egzersiz yapın</li>
+<li>Stres yönetimi öğrenin</li>
+</ul>
+"""
+    
+    elif domain == "cardiovascular":
+        specific_response = f"""
+<h4>❤️ Kalp Sağlığı Değerlendirmesi</h4>
+<div style="background-color: #e8f5e8; padding: 15px; border-radius: 8px; margin: 10px 0;">
+    <p><strong>Sorunuz:</strong> <em>"{user_prompt}"</em></p>
+</div>
+
+<h4>📈 Kardiyovasküler Risk Faktörleri</h4>
+<div style="display: flex; gap: 20px; margin: 15px 0;">
+    <div style="flex: 1; background-color: #ffebee; padding: 15px; border-radius: 8px;">
+        <h5>🔒 Değiştirilemez Faktörler</h5>
+        <ul>
+            <li>Yaş ve cinsiyet</li>
+            <li>Aile öyküsü</li>
+            <li>Genetik predispozisyon</li>
+        </ul>
+    </div>
+    <div style="flex: 1; background-color: #e8f5e8; padding: 15px; border-radius: 8px;">
+        <h5>🎛️ Kontrol Edilebilir Faktörler</h5>
+        <ul>
+            <li>Kan basıncı</li>
+            <li>Kolesterol seviyeleri</li>
+            <li>Kan şekeri</li>
+            <li>Yaşam tarzı</li>
+        </ul>
+    </div>
+</div>
+
+<h4>🏥 Yapılması Gerekenler</h4>
+<ol>
+<li><strong>Kardiyoloji kontrolü</strong> - En kısa sürede randevu alın</li>
+<li><strong>Kan tahlilleri</strong> - Kolesterol, şeker, CRP tekrarlayın</li>
+<li><strong>EKG ve Efor testi</strong> - Kalp ritmini kontrol ettirin</li>
+<li><strong>Yaşam tarzı değişiklikleri</strong> - Hemen başlayabilirsiniz</li>
+</ol>
+
+<h4>💪 Kalp Dostu Yaşam</h4>
+<ul>
+<li>Haftada 150 dakika orta şiddetli egzersiz</li>
+<li>Akdeniz diyeti tarzı beslenme</li>
+<li>Sigarayı bırakın, alkolü sınırlayın</li>
+<li>Stres yönetimi teknikleri öğrenin</li>
+<li>Düzenli uyku (7-8 saat)</li>
+</ul>
+"""
+    
+    elif domain == "fetal_health":
+        specific_response = f"""
+<h4>👶 Bebek Sağlığı Takibi</h4>
+<div style="background-color: #fff8e1; padding: 15px; border-radius: 8px; margin: 10px 0;">
+    <p><strong>Sorunuz:</strong> <em>"{user_prompt}"</em></p>
+</div>
+
+<h4>📊 CTG (Kardiyotokografi) Hakkında</h4>
+<ul>
+<li><strong>🫀 Kalp ritmi monitörü:</strong> Bebeğin kalp atışlarını izler</li>
+<li><strong>🤱 Hareket takibi:</strong> Bebek hareketlerini kaydeder</li>
+<li><strong>📈 Patern analizi:</strong> Normal gelişim değerlendirilir</li>
+<li><strong>⏰ Sürekli takip:</strong> Gebelik boyunca düzenli kontrole gerek vardır</li>
+</ul>
+
+<h4>🏥 Doktor Önerileri</h4>
+<ol>
+<li><strong>Jinekolog kontrolü</strong> - Sonuçları birlikte değerlendirin</li>
+<li><strong>Ek testler</strong> - Gerekirse ultrason, doppler</li>
+<li><strong>Takip planı</strong> - Kontrol sıklığını belirleyin</li>
+<li><strong>Acil durumlar</strong> - Hangi belirtilerde hastaneye gidileceğini öğrenin</li>
+</ol>
+
+<h4>🤰 Sağlıklı Gebelik İçin</h4>
+<ul>
+<li>Düzenli prenatal vitaminler alın</li>
+<li>Dengeli beslenme programı uygulayın</li>
+<li>Hafif egzersizler yapın (doktor onayıyla)</li>
+<li>Stres seviyenizi düşük tutun</li>
+<li>Düzenli uyku ve dinlenme</li>
+</ul>
+
+<div style="background-color: #e1f5fe; padding: 15px; border-radius: 8px; margin-top: 15px;">
+    <p><strong>💝 Unutmayın:</strong> Her gebelik özeldir ve bebek sağlığı sürekli değişkenlik gösterebilir. Düzenli takip ve doktor iletişimi en önemli faktörlerdir.</p>
+</div>
+"""
+    else:
+        specific_response = f"""
+<h4>🩺 Genel Sağlık Değerlendirmesi</h4>
+<div style="background-color: #f5f5f5; padding: 15px; border-radius: 8px; margin: 10px 0;">
+    <p><strong>Sorunuz:</strong> <em>"{user_prompt}"</em></p>
+</div>
+
+<p>Bu alan için özel bilgiler hazırlanmaktadır. Lütfen doktor kontrolünüzü aksatmayın.</p>
+
+<h4>💡 Genel Öneriler</h4>
+<ul>
+<li>Düzenli sağlık kontrolleri</li>
+<li>Sağlıklı yaşam tarzı</li>
+<li>Stres yönetimi</li>
+<li>Dengeli beslenme</li>
+</ul>
+"""
+    
+    # Sonuç mesajı
+    footer_message = """
+<div style="background-color: #e8f5e8; border-left: 4px solid #4caf50; padding: 15px; margin-top: 20px;">
+    <h4>🎯 Sonuç</h4>
+    <p><strong>Bu bilgiler genel rehberlik amaçlıdır.</strong> Kesin tanı ve tedavi için mutlaka bir sağlık uzmanına başvurun.</p>
+    <p><strong>Acil durumlarda</strong> 112 numaralı telefonu arayarak ambulans çağırın.</p>
+</div>
+
+<div style="text-align: center; margin-top: 20px; padding: 10px; background-color: #f8f9fa; border-radius: 8px;">
+    <p style="margin: 0; color: #6c757d; font-size: 14px;">
+        💝 <strong>Medirisk AI Sistemi</strong> - Sağlığınız bizim önceliğimiz
+    </p>
+</div>
+"""
+    
+    return base_response + specific_response + footer_message
+<p>Sorunuz: <em>"{user_prompt}"</em></p>
+<p>Test sonuçlarınız değerlendirilmiş ve size özel öneriler hazırlanmıştır.</p>
+"""
+    
+    footer = f"""
+<h4>🩺 Önemli Uyarı</h4>
+<p><strong>Bu bilgiler kesinlikle tıbbi tavsiye yerine geçmez.</strong> Mutlaka qualified bir doktor ile görüşerek durumunuzu değerlendirin.</p>
+
+<p><em>AI asistanımız şu anda yoğun olduğu için standart bilgilendirme sağlanmıştır. Daha detaylı analiz için lütfen daha sonra tekrar deneyin.</em></p>
+"""
+    
+    return base_response + specific_response + footer
+
+def create_medical_prompt(domain: str, patient_data: Dict[str, Any], 
+                         prediction_result: Dict[str, Any], user_prompt: str) -> str:
+    """Create domain-specific medical prompt for Gemini."""
+    
+    # Türkiye saatine göre bugünün tarihini al
+    from datetime import datetime
+    import locale
+    
+    # Türkçe locale ayarla (mümkünse)
+    try:
+        locale.setlocale(locale.LC_TIME, 'tr_TR.UTF-8')
+    except:
+        pass
+    
+    current_date = datetime.now().strftime("%d %B %Y")
+    
+    base_prompt = f"""
+Sen uzman bir Türk doktorsun ve PACE metodolojisini kullanarak sistematik, kanıt tabanlı medikal raporlar hazırlarsın.
+
+ÖNEMLI FORMAT TALİMATLARI:
+- Raporu HTML formatında hazırla (sadece body içeriği, full HTML document değil)
+- Başlıkları <h3> etiketi ile belirgin yap
+- Alt başlıkları <h4> etiketi ile ayır
+- Önemli bilgileri <strong> etiketiyle vurgula
+- Liste halindeki bilgileri <ul><li> etiketleriyle düzenle
+- Tarih bilgisini mutlaka "{current_date}" olarak kullan
+- Hasta bilgilerini tablolar halinde düzenle
+- DOCTYPE, html, head etiketleri kullanma, sadece body içeriği ver
+
+PACE Yaklaşımı:
+- PLAN: Analiz planı ve hipotezler
+- ANALYZE: Veri analizi ve bulgular  
+- CONSTRUCT: Sonuç yapılandırması
+- EXECUTE: Öneri ve takip planı
+
+Hasta Verisi: {json.dumps(patient_data, ensure_ascii=False, indent=2)}
+AI Tahmin Sonucu: {json.dumps(prediction_result, ensure_ascii=False, indent=2)}
+
+Kullanıcının Sorusu: "{user_prompt}"
+
+GÖREV: Yukarıdaki verileri kullanarak profesyonel, HTML formatında bir medikal rapor hazırla.
+MUTLAKA tarih kısmını "{current_date}" olarak doldur, [Tarih] şeklinde boş bırakma!
+
+ÖNEMLİ: Sadece HTML içeriği ver, ```html veya ``` etiketleri kullanma!
+Direkt HTML etiketleriyle başla (örn: <h3>...</h3>)."""
+
+    if domain == "breast_cancer":
+        domain_prompt = f"""
+Sen deneyimli bir meme hastalıkları uzmanısın. Hastanın sorusunu samimi ve bilimsel bir dille yanıtla.
+
+ÖNEMLİ TALİMATLAR:
+- Rapor başlığı, PACE metodolojisi, şablon ifadeler KULLANMA
+- Doktor-hasta konuşması gibi samimi ol
+- Bilimsel gerçekleri açık dille anlat
+- Hastanın endişelerini anlayışla karşıla
+- Konkret öneriler ver
+
+SORUYA DOĞRUDAN CEVAP VER:
+Hastanın gerçek verilerini kullanarak "{user_prompt}" sorusunu yanıtla.
+
+Hasta Bilgileri: {json.dumps(patient_data, ensure_ascii=False, indent=2)}
+Risk Değerlendirmesi: {json.dumps(prediction_result, ensure_ascii=False, indent=2)}
+
+Yanıtını şu şekilde yapılandır:
+1. Durumu açıkla (neden bu risk seviyesi?)
+2. Hangi faktörler etkili?
+3. Bu sizin için ne anlama geliyor?
+4. Ne yapmalısınız?
+
+Sıcak, anlayışlı ama bilimsel bir dille konuş. Şablon ifadeler kullanma.
+"""
+    
+    elif domain == "cardiovascular":
+        domain_prompt = """
+Sen deneyimli bir kardiyolog ve iç hastalıkları uzmanısın. Hastanın kalp sağlığı ile ilgili sorusunu samimi ve bilimsel bir dilde yanıtla.
+
+YANITLAMA PRENSİPLERİN:
+• Hasta ile birebir konuşur gibi, sıcak ve anlayışlı bir dil kullan
+• Tıbbi bilgileri herkesin anlayabileceği şekilde açıkla
+• Endişeleri gider, umut ver ama gerçekçi ol
+• Kişiye özel öneriler ver, genel tavsiyelerden kaçın
+• Risk faktörlerini korku yaratmadan, bilgilendirici şekilde açıkla
+
+ÖNEMLİ: Rapor başlığı, strukturlu bölümler, metodoloji isimlerine YER VERME. Doğal, akıcı bir tıbbi danışmanlık konuşması yap.
+
+Cevabında şunları dahil et:
+- Risk faktörlerinin kişisel duruma özel analizi
+- Kalp sağlığını koruma yöntemleri
+- Yaşam tarzı önerileri
+- Takip gereksinimleri
+- Umut verici yaklaşımlar
+
+HTML formatında, paragraflar ve listeler kullanarak düzenle.
+"""
+    
+    elif domain == "fetal_health":
+        domain_prompt = """
+Sen deneyimli bir kadın doğum uzmanı ve perinatoloji uzmanısın. Anne adayının bebek sağlığı ile ilgili sorusunu samimi ve güven verici bir dilde yanıtla.
+
+YANITLAMA PRENSİPLERİN:
+• Anne adayı ile birebir konuşur gibi, destekleyici ve anlayışlı bir dil kullan
+• Tıbbi bilgileri korku yaratmadan, açık ve anlaşılır şekilde paylaş
+• Endişeleri gider, anne-bebek bağını güçlendirecek yaklaşım kullan
+• Gebelik sürecini pozitif ama gerçekçi bir şekilde ele al
+• Her anne için özel tavsiyelerde bulun
+
+ÖNEMLİ: Rapor başlığı, strukturlu bölümler, metodoloji isimlerine YER VERME. Doğal, sıcak bir doktor-hasta konuşması yap.
+
+Cevabında şunları dahil et:
+- CTG sonuçlarının anne adayının anlayacağı şekilde açıklanması
+- Bebek sağlığı ile ilgili değerlendirmeler
+- Gebelik takibi önerileri  
+- Anne sağlığını koruma yöntemleri
+- Doğuma hazırlık tavsiyeleri
+
+HTML formatında, paragraflar ve listeler kullanarak düzenle.
+"""
+    
+    else:
+        domain_prompt = """
+<h3>🩺 GENEL MEDİKAL RAPOR GELİŞTİRME</h3>
+
+<h4>1. BULGULAR ÖZETİ</h4>
+<h4>2. KLİNİK YORUMLAMA</h4>
+<h4>3. ÖNERİLER VE TAKİP</h4>
+<h4>4. HASTA EĞİTİMİ</h4>
+
+<strong>Raporu medikal terminolojiyi açıklayarak, HTML formatında ve anlaşılır dilde hazırla.</strong>
+"""
+    
+    return base_prompt + "\n" + domain_prompt
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000) 

@@ -133,7 +133,7 @@ function App() {
               } 
             />
             <Route 
-              path="/test-result/:testId" 
+              path="/test-result/:id" 
               element={
                 <ProtectedRoute userType="patient">
                   <Navbar />

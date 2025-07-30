@@ -1,5 +1,11 @@
 import { HealthTest, TestResult, User, Patient, Doctor, ChatMessage, DashboardStats } from '../types';
 
+// PNG ikonlarını import et
+import heartIcon from '../images/Heart.png';
+import cancerIcon from '../images/cancer.png';
+import fetalIcon from '../images/fetal.png';
+import depressionIcon from '../images/depression.png';
+
 // Mock kullanıcılar
 export const mockUsers: User[] = [
   {
@@ -21,10 +27,10 @@ export const mockUsers: User[] = [
 // Sağlık testleri
 export const healthTests: HealthTest[] = [
   {
-    id: 'heart-disease',
+    id: 'kardiyovaskuler-risk',
     name: 'Kalp Hastalığı Risk Analizi',
     description: 'Kalp hastalığı risk faktörlerini değerlendirir ve koroner arter hastalığı riskini hesaplar.',
-    icon: '❤️',
+    icon: heartIcon, // PNG yolu
     category: 'cardiology',
     fields: [
       { name: 'age', label: 'Yaş', type: 'number', required: true, validation: { min: 18, max: 100 } },
@@ -43,7 +49,7 @@ export const healthTests: HealthTest[] = [
     id: 'fetal-health',
     name: 'Fetal Sağlık Taraması',
     description: 'Hamilelik sırasında fetal sağlık durumunu değerlendirir ve risk faktörlerini analiz eder.',
-    icon: '👶',
+    icon: fetalIcon, // PNG yolu
     category: 'obstetrics',
     fields: [
       { name: 'age', label: 'Anne Yaşı', type: 'number', required: true, validation: { min: 15, max: 50 } },
@@ -61,7 +67,7 @@ export const healthTests: HealthTest[] = [
     id: 'breast-cancer',
     name: 'Meme Kanseri Risk Analizi',
     description: 'Meme kanseri risk faktörlerini değerlendirir ve erken teşhis için öneriler sunar.',
-    icon: '🩺',
+    icon: cancerIcon, // PNG yolu
     category: 'oncology',
     fields: [
       { name: 'age', label: 'Yaş', type: 'number', required: true, validation: { min: 18, max: 100 } },
@@ -79,7 +85,7 @@ export const healthTests: HealthTest[] = [
     id: 'depression',
     name: 'Depresyon Risk Değerlendirmesi',
     description: 'Depresyon risk faktörlerini analiz eder ve ruh sağlığı durumunu değerlendirir.',
-    icon: '🧠',
+    icon: depressionIcon, // PNG yolu
     category: 'psychology',
     fields: [
       { name: 'age', label: 'Yaş', type: 'number', required: true, validation: { min: 12, max: 100 } },
@@ -99,7 +105,7 @@ export const healthTests: HealthTest[] = [
 export const mockTestResults: TestResult[] = [
   {
     id: '1',
-    testId: 'heart-disease',
+    testId: 'kardiyovaskuler-risk',
     patientId: '1',
     formData: {
       age: 45,
@@ -204,7 +210,7 @@ export const predictTestResult = (testId: string, formData: Record<string, any>)
   let recommendations: string[];
 
   switch (testId) {
-    case 'heart-disease':
+    case 'kardiyovaskuler-risk':
       if (formData.age > 65) baseScore += 25;
       if (formData.gender === 'Erkek') baseScore += 15;
       if (formData.chestPain !== 'Yok') baseScore += 30;
@@ -365,4 +371,4 @@ export const predictTestResult = (testId: string, formData: Record<string, any>)
     recommendations,
     pdfUrl: `/reports/${testId}-${Date.now()}.pdf`
   };
-}; 
+};

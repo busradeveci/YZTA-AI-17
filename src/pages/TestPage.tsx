@@ -29,7 +29,8 @@ import {
 import { useParams, useNavigate } from 'react-router-dom';
 import { healthTests, predictTestResult, mockChatMessages } from '../utils/mockData';
 import { TestResult, ChatMessage } from '../types';
-import { Send, SmartToy, Person, ExpandMore, ExpandLess } from '@mui/icons-material';
+import { Send, Person, ExpandMore, ExpandLess } from '@mui/icons-material';
+import robotIcon from '../images/robot.png'; // en üste ekleyin
 
 const TestPage: React.FC = () => {
   const { testId } = useParams<{ testId: string }>();
@@ -96,7 +97,9 @@ const TestPage: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      return;
+    }
     
     setLoading(true);
     
@@ -118,10 +121,14 @@ const TestPage: React.FC = () => {
         recommendations: resultData.recommendations,
         createdAt: new Date()
       };
-      localStorage.setItem(`testResult_${testId}`, JSON.stringify(fullResult));
+      
+      // Mevcut test sonuçlarını al ve yeni sonucu ekle
+      const existingResults = JSON.parse(localStorage.getItem('testResults') || '[]');
+      existingResults.push(fullResult);
+      localStorage.setItem('testResults', JSON.stringify(existingResults));
       
       // Test sonuç sayfasına yönlendir
-      navigate(`/test-result/${testId}`);
+      navigate(`/test-result/${fullResult.id}`);
     } catch (error) {
       console.error('Test hatası:', error);
     } finally {
@@ -320,29 +327,108 @@ const TestPage: React.FC = () => {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container
+      maxWidth="lg"
+      sx={{
+        py: 4,
+        backgroundColor: '#FFFFFF', // Arka plan beyaz (FFFFF)
+        minHeight: '100vh',
+        fontFamily: 'Inter, Arial, sans-serif'
+      }}
+    >
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, gap: 4 }}>
         {/* Sol Taraf - Test Formu */}
         <Box sx={{ flex: { lg: 2 } }}>
-          <Paper elevation={3} sx={{ p: 4 }}>
+          <Paper
+            elevation={3}
+            sx={{
+              p: 4,
+              background: '#F8FBFF',
+              border: '1.5px solid #E0E7EF',
+              boxShadow: '0 4px 24px 0 rgba(30, 89, 174, 0.10)',
+              borderRadius: 4,
+            }}
+          >
             <Box sx={{ textAlign: 'center', mb: 4 }}>
-              <Typography variant="h3" gutterBottom sx={{ fontWeight: 700 }}>
-                {test.icon} {test.name}
-              </Typography>
-              <Typography variant="body1" color="text.secondary">
+              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+                <img
+                  src={test.icon}
+                  alt={test.name}
+                  style={{
+                    width: 48,
+                    height: 48,
+                    objectFit: 'contain',
+                    background: 'transparent',
+                    marginBottom: 8,
+                    userSelect: 'none'
+                  }}
+                  draggable={false}
+                />
+                <Typography
+                  variant="h3"
+                  gutterBottom
+                  sx={{
+                    fontWeight: 700,
+                    fontFamily: 'Manrope, Arial, sans-serif',
+                    color: '#0F3978',
+                    letterSpacing: '-0.5px',
+                    userSelect: 'none'
+                  }}
+                >
+                  {test.name}
+                </Typography>
+              </Box>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: '#4787E6',
+                  fontFamily: 'Inter, Arial, sans-serif',
+                  mb: 2,
+                }}
+              >
                 {test.description}
               </Typography>
             </Box>
 
             <Stepper activeStep={0} sx={{ mb: 4 }}>
               <Step>
-                <StepLabel>Bilgileri Girin</StepLabel>
+                <StepLabel
+                  sx={{
+                    '& .MuiStepLabel-label': {
+                      fontFamily: 'Manrope, Arial, sans-serif',
+                      color: '#0F3978',
+                      fontWeight: 600,
+                    }
+                  }}
+                >
+                  Bilgileri Girin
+                </StepLabel>
               </Step>
               <Step>
-                <StepLabel>Analiz</StepLabel>
+                <StepLabel
+                  sx={{
+                    '& .MuiStepLabel-label': {
+                      fontFamily: 'Manrope, Arial, sans-serif',
+                      color: '#0F3978',
+                      fontWeight: 600,
+                    }
+                  }}
+                >
+                  Analiz
+                </StepLabel>
               </Step>
               <Step>
-                <StepLabel>Sonuçlar</StepLabel>
+                <StepLabel
+                  sx={{
+                    '& .MuiStepLabel-label': {
+                      fontFamily: 'Manrope, Arial, sans-serif',
+                      color: '#0F3978',
+                      fontWeight: 600,
+                    }
+                  }}
+                >
+                  Sonuçlar
+                </StepLabel>
               </Step>
             </Stepper>
 
@@ -357,6 +443,17 @@ const TestPage: React.FC = () => {
                   size="large"
                   onClick={() => navigate('/dashboard')}
                   disabled={loading}
+                  sx={{
+                    borderRadius: 2,
+                    fontWeight: 600,
+                    fontFamily: 'Manrope, Arial, sans-serif',
+                    color: '#0F3978',
+                    borderColor: '#0ED1B1',
+                    '&:hover': {
+                      borderColor: '#1B69DE',
+                      background: '#F0F6FF'
+                    }
+                  }}
                 >
                   İptal
                 </Button>
@@ -365,9 +462,27 @@ const TestPage: React.FC = () => {
                   variant="contained"
                   size="large"
                   disabled={loading}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleSubmit();
+                  }}
                   startIcon={loading ? <CircularProgress size={20} /> : null}
+                  sx={{
+                    borderRadius: 2,
+                    fontWeight: 600,
+                    fontFamily: 'Manrope, Arial, sans-serif',
+                    background: 'linear-gradient(90deg, #0ED1B1 0%, #1B69DE 100%)',
+                    color: '#fff',
+                    boxShadow: '0 2px 8px 0 rgba(14,209,177,0.08)',
+                    transition: 'background 0.2s, box-shadow 0.2s, transform 0.2s',
+                    '&:hover': {
+                      background: 'linear-gradient(90deg, #1B69DE 0%, #0ED1B1 100%)',
+                      boxShadow: '0 4px 16px 0 rgba(27,105,222,0.12)',
+                      transform: 'translateY(-2px) scale(1.03)'
+                    }
+                  }}
                 >
-                  {loading ? 'Analiz Ediliyor...' : 'Tahminle'}
+                  {loading ? 'Analiz Ediliyor...' : 'Analizi Başlat'}
                 </Button>
               </Box>
             </form>
@@ -376,18 +491,58 @@ const TestPage: React.FC = () => {
 
         {/* Sağ Taraf - Chatbot */}
         <Box sx={{ flex: { lg: 1 } }}>
-          <Card elevation={3} sx={{ height: 'fit-content', position: 'sticky', top: 20 }}>
+          <Card
+            elevation={3}
+            sx={{
+              height: 'fit-content',
+              position: 'sticky',
+              top: 20,
+              borderRadius: 4,
+              background: '#F8FBFF',
+              border: '1.5px solid #E0E7EF',
+              boxShadow: '0 4px 24px 0 rgba(30, 89, 174, 0.10)',
+            }}
+          >
             <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>
-                    <SmartToy />
-                  </Avatar>
+                  <Box
+                    sx={{
+                      width: 32,
+                      height: 32,
+                      mr: 2,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <img
+                      src={robotIcon}
+                      alt="Asistan"
+                      style={{
+                        width: 32,
+                        height: 32,
+                        objectFit: 'contain',
+                        background: 'transparent',
+                        borderRadius: 0,
+                        userSelect: 'none',
+                        display: 'block',
+                      }}
+                      draggable={false}
+                    />
+                  </Box>
                   <Box>
-                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                      Test Asistanı
+                    <Typography variant="h6" sx={{
+                      fontWeight: 600,
+                      fontFamily: 'Manrope, Arial, sans-serif',
+                      color: '#0F3978'
+                    }}>
+                      MediRisk Asistan
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                      color: '#4787E6',
+                      fontFamily: 'Inter, Arial, sans-serif'
+                    }}>
                       Test hakkında sorularınızı sorun
                     </Typography>
                   </Box>
@@ -395,6 +550,9 @@ const TestPage: React.FC = () => {
                 <IconButton
                   onClick={() => setIsChatExpanded(!isChatExpanded)}
                   size="small"
+                  sx={{
+                    color: '#0F3978'
+                  }}
                 >
                   {isChatExpanded ? <ExpandLess /> : <ExpandMore />}
                 </IconButton>
@@ -408,23 +566,44 @@ const TestPage: React.FC = () => {
                   {chatMessages.map((message) => (
                     <ListItem key={message.id} sx={{ px: 0 }}>
                       <ListItemAvatar>
-                        <Avatar sx={{ 
-                          bgcolor: message.type === 'user' ? 'primary.main' : 'grey.300',
-                          color: message.type === 'user' ? 'white' : 'grey.700'
-                        }}>
-                          {message.type === 'user' ? <Person /> : <SmartToy />}
+                        <Avatar
+                          sx={{
+                            bgcolor: message.type === 'user' ? '#0F3978' : '#E0E7EF',
+                            color: message.type === 'user' ? '#fff' : '#0F3978',
+                            fontFamily: 'Manrope, Arial, sans-serif'
+                          }}
+                        >
+                          {message.type === 'user' ? (
+                            <Person sx={{ fontSize: 22 }} />
+                          ) : (
+                            <img
+                              src={robotIcon}
+                              alt="Asistan"
+                              style={{
+                                width: 22,
+                                height: 22,
+                                objectFit: 'contain',
+                                background: 'transparent',
+                                borderRadius: 0,
+                                userSelect: 'none',
+                                display: 'block',
+                              }}
+                              draggable={false}
+                            />
+                          )}
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText
                         primary={
-                          <Box sx={{ 
-                            bgcolor: message.type === 'user' ? 'primary.main' : 'grey.100',
-                            color: message.type === 'user' ? 'white' : 'text.primary',
+                          <Box sx={{
+                            bgcolor: message.type === 'user' ? '#0F3978' : '#F8FBFF',
+                            color: message.type === 'user' ? '#fff' : '#0F3978',
                             p: 1.5,
                             borderRadius: 2,
-                            maxWidth: '80%'
+                            maxWidth: '80%',
+                            fontFamily: 'Inter, Arial, sans-serif'
                           }}>
-                            <Typography variant="body2">
+                            <Typography variant="body2" sx={{ fontFamily: 'Inter, Arial, sans-serif' }}>
                               {message.content}
                             </Typography>
                           </Box>
@@ -444,12 +623,29 @@ const TestPage: React.FC = () => {
                     placeholder="Test hakkında soru sorun..."
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
-                    sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }}
+                    sx={{
+                      '& .MuiOutlinedInput-root': { borderRadius: 3, background: '#fff' },
+                      fontFamily: 'Inter, Arial, sans-serif'
+                    }}
+                    InputProps={{
+                      style: {
+                        fontFamily: 'Inter, Arial, sans-serif',
+                        fontSize: '12px',
+                      },
+                    }}
                   />
-                  <IconButton 
-                    type="submit" 
+                  <IconButton
+                    type="submit"
                     color="primary"
                     disabled={!chatInput.trim()}
+                    sx={{
+                      background: 'linear-gradient(90deg, #0ED1B1 0%, #1B69DE 100%)',
+                      color: '#fff',
+                      borderRadius: 2,
+                      '&:hover': {
+                        background: 'linear-gradient(90deg, #1B69DE 0%, #0ED1B1 100%)',
+                      }
+                    }}
                   >
                     <Send />
                   </IconButton>
@@ -463,4 +659,4 @@ const TestPage: React.FC = () => {
   );
 };
 
-export default TestPage; 
+export default TestPage;

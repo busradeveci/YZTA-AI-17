@@ -19,6 +19,7 @@ import {
   Assessment
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
+import logo from '../images/login.png'; // LOGO EKLENDİ
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
@@ -60,14 +61,46 @@ const Navbar: React.FC = () => {
   }
 
   return (
-    <AppBar position="sticky" elevation={2}>
-      <Toolbar>
+    <AppBar
+      position="sticky"
+      elevation={2}
+      sx={{
+        backgroundColor: '#0F3978',
+        borderRadius: 0, // Köşeler tamamen düz
+        boxShadow: 'none', // İsterseniz gölgeyi de kaldırabilirsiniz
+      }}
+    >
+      <Toolbar sx={{ borderRadius: 0, minHeight: 64 }}>
         {/* Logo ve Başlık */}
         <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: 700, mr: 2 }}>
-            🏥 MediRisk
+          <img
+            src={logo}
+            alt="MediRisk Logo"
+            style={{
+              width: 40,
+              height: 40,
+              objectFit: 'contain',
+              marginRight: 12,
+              userSelect: 'none',
+              borderRadius: 0, // Logo da köşesiz
+            }}
+            draggable={false}
+          />
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{
+              fontWeight: 700,
+              mr: 2,
+              color: '#fff',
+              fontFamily: 'Manrope, Arial, sans-serif',
+              letterSpacing: '-0.5px',
+              borderRadius: 0, // Başlık da köşesiz
+            }}
+          >
+            MediRisk
           </Typography>
-          
+
           {/* Navigasyon Menüsü */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, ml: 4 }}>
             <Button
@@ -77,9 +110,14 @@ const Navbar: React.FC = () => {
               sx={{
                 mx: 1,
                 bgcolor: isActive('/dashboard') ? 'rgba(255,255,255,0.1)' : 'transparent',
+                color: '#fff',
+                fontWeight: 600,
+                fontFamily: 'Inter, Arial, sans-serif',
+                borderRadius: 0, // Düz köşe
                 '&:hover': {
-                  bgcolor: 'rgba(255,255,255,0.1)'
-                }
+                  bgcolor: 'rgba(255,255,255,0.1)',
+                  borderRadius: 0,
+                },
               }}
             >
               Dashboard
@@ -91,9 +129,14 @@ const Navbar: React.FC = () => {
               sx={{
                 mx: 1,
                 bgcolor: isActive('/history') ? 'rgba(255,255,255,0.1)' : 'transparent',
+                color: '#fff',
+                fontWeight: 600,
+                fontFamily: 'Inter, Arial, sans-serif',
+                borderRadius: 0,
                 '&:hover': {
-                  bgcolor: 'rgba(255,255,255,0.1)'
-                }
+                  bgcolor: 'rgba(255,255,255,0.1)',
+                  borderRadius: 0,
+                },
               }}
             >
               Geçmiş
@@ -105,9 +148,14 @@ const Navbar: React.FC = () => {
               sx={{
                 mx: 1,
                 bgcolor: isActive('/about') ? 'rgba(255,255,255,0.1)' : 'transparent',
+                color: '#fff',
+                fontWeight: 600,
+                fontFamily: 'Inter, Arial, sans-serif',
+                borderRadius: 0,
                 '&:hover': {
-                  bgcolor: 'rgba(255,255,255,0.1)'
-                }
+                  bgcolor: 'rgba(255,255,255,0.1)',
+                  borderRadius: 0,
+                },
               }}
             >
               Hakkında
@@ -117,19 +165,19 @@ const Navbar: React.FC = () => {
 
         {/* Kullanıcı Menüsü */}
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="body2" sx={{ mr: 2, display: { xs: 'none', sm: 'block' } }}>
+          <Typography variant="body2" sx={{ mr: 2, display: { xs: 'none', sm: 'block' }, color: '#fff' }}>
             {user.name}
           </Typography>
-          
+
           <IconButton
             onClick={handleMenuOpen}
-            sx={{ color: 'white' }}
+            sx={{ color: 'white', borderRadius: 0 }}
           >
-            <Avatar sx={{ width: 32, height: 32, bgcolor: 'rgba(255,255,255,0.2)' }}>
+            <Avatar sx={{ width: 32, height: 32, bgcolor: 'rgba(255,255,255,0.2)', borderRadius: 0 }}>
               <Person />
             </Avatar>
           </IconButton>
-          
+
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
@@ -138,16 +186,18 @@ const Navbar: React.FC = () => {
               sx: {
                 mt: 1,
                 minWidth: 200,
+                borderRadius: 0, // Menü de köşesiz
                 '& .MuiMenuItem-root': {
                   py: 1.5,
-                  px: 2
-                }
-              }
+                  px: 2,
+                  borderRadius: 0,
+                },
+              },
             }}
           >
             <MenuItem onClick={handleMenuClose}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Avatar sx={{ width: 32, height: 32, mr: 2, bgcolor: 'primary.main' }}>
+                <Avatar sx={{ width: 32, height: 32, mr: 2, bgcolor: 'primary.main', borderRadius: 0 }}>
                   <Person />
                 </Avatar>
                 <Box>
@@ -185,4 +235,4 @@ const Navbar: React.FC = () => {
   );
 };
 
-export default Navbar; 
+export default Navbar;

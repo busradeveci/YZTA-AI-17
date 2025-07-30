@@ -54,6 +54,7 @@ export interface TestResult {
   createdAt: Date;
   pdfUrl?: string;
   confidence?: number;
+  prediction?: string;
   model_info?: {
     model_name: string;
     model_type: string;

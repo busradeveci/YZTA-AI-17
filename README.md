@@ -19,15 +19,83 @@ MedOps Trello Backlog Board
 - Backlog, sprint raporlarındaki ekran görüntüleriyle belgelendi.
 
 ## Ürün Açıklaması
-MediRisk uygulaması; kronik böbrek hastalığı, fetal sağlık, meme kanseri ve depresyon gibi çeşitli sağlık durumları için farklı veri setlerini kullanarak, kullanıcıların kendi sağlık risklerini değerlendirmelerine olanak tanıyan bir web platformudur.  
+MediRisk uygulaması; kronik böbrek hastalığı, fetal sağlık ve meme kanseri gibi çeşitli sağlık durumları için farklı veri setlerini kullanarak, kullanıcıların kendi sağlık risklerini değerlendirmelerine olanak tanıyan bir web platformudur.  
 Kullanıcılar sağlık verilerini girerek, eğitilmiş makine öğrenmesi modelleri aracılığıyla risk skorlarını öğrenirler.
 
+## Gereksinimler
+
+### Sistem Gereksinimleri
+- **Python:** 3.8 veya üzeri
+- **Node.js:** 14.0 veya üzeri
+- **NPM:** 6.0 veya üzeri
+
+### Backend Dependencies (Python)
+```txt
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+pandas>=2.0.0
+numpy>=1.24.0
+scikit-learn>=1.3.0
+python-multipart==0.0.6
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+sqlalchemy==2.0.23
+alembic==1.13.1
+psycopg2-binary==2.9.9
+python-dotenv==1.0.0
+requests==2.31.0
+joblib==1.3.2
+aiohttp==3.9.1
+google-generativeai>=0.3.0
+```
+
+### Frontend Dependencies (React)
+```json
+{
+  "@emotion/react": "^11.14.0",
+  "@emotion/styled": "^11.14.1",
+  "@mui/icons-material": "^7.2.0",
+  "@mui/material": "^7.2.0",
+  "@types/jspdf": "^1.3.3",
+  "axios": "^0.27.2",
+  "html2canvas": "^1.4.1",
+  "jspdf": "^3.0.1",
+  "react": "^18.2.0",
+  "react-dom": "^18.2.0",
+  "react-router-dom": "^6.3.0",
+  "react-scripts": "5.0.1",
+  "typescript": "^4.7.4"
+}
+```
+
+### Hızlı Başlangıç
+```bash
+# 1. Projeyi klonlayın
+git clone https://github.com/busradeveci/YZTA-AI-17.git
+cd YZTA-AI-17
+
+# 2. Otomatik kurulum ve başlatma
+python run.py
+
+# Manuel kurulum için:
+# Backend: pip install -r backend/requirements.txt
+# Frontend: npm install && npm start
+
+# Servisler:
+# Backend API: http://localhost:8008
+# Frontend: http://localhost:3001
+```
+
 ## Ürün Özellikleri
-- Çoklu sağlık veri setleri (Chronic Kidney Disease, Fetal Health, Breast Cancer, Student Depression)
-- ML tabanlı risk tahmin modelleri
-- Kullanıcı dostu arayüz
-- Risk skorlarını grafiklerle görselleştirme
-- Güvenli oturum yönetimi ve kullanıcı doğrulama
+- **Çoklu Sağlık Veri Setleri:** Meme kanseri, kardiyovasküler hastalık, fetal sağlık
+- **ML Tabanlı Risk Tahmin:** RandomForest ve diğer makine öğrenmesi modelleri
+- **AI Destekli Rapor Geliştirme:** Google Gemini API ile kişiselleştirilmiş tıbbi yorumlar
+- **PDF Rapor Sistemi:** Chat geçmişi dahil kapsamlı PDF raporları
+- **Responsive Tasarım:** Material-UI ile mobil uyumlu arayüz
+- **Gerçek Zamanlı Chat:** AI asistan ile interaktif sohbet
+- **Risk Görselleştirme:** Grafikler ve renkli skorlarla risk analizi
+- **Güvenli Oturum Yönetimi:** LocalStorage ile kullanıcı doğrulama
 
 ## Hedef Kitle
 - Sağlık durumu hakkında ön değerlendirme yapmak isteyen kullanıcılar
@@ -45,7 +113,7 @@ Kullanıcılar sağlık verilerini girerek, eğitilmiş makine öğrenmesi model
 
 ### Tamamlanan Çalışmalar
 - **Veri Setlerinin Toplanması ve İncelenmesi**
-  - Chronic Kidney Disease, Fetal Health, Breast Cancer ve Student Depression veri setleri projeye dahil edildi.
+  - Chronic Kidney Disease, Fetal Health ve Breast Cancer veri setleri projeye dahil edildi.
   - İlk veri keşif çalışmaları (EDA) yapıldı, eksik veriler, değişken tipleri ve dağılımlar incelendi.
 
 - **İlk Modelleme Çalışmaları**
