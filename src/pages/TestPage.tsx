@@ -104,12 +104,74 @@ const TestPage: React.FC = () => {
     setLoading(true);
     
     try {
-      // Mock API çağrısı simülasyonu
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Backend API'ye gerçek çağrı yap
+      const response = await fetch('http://localhost:8008/predict', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          test_type: testId,
+          form_data: formData
+        })
+      });
+
+      if (!response.ok) {
+        // Backend hatası durumunda fallback: mock data kullan
+        console.warn('Backend API hatası, mock data kullanılıyor:', response.status);
+        const resultData = predictTestResult(testId!, formData);
+        
+        const fullResult: TestResult = {
+          id: Date.now().toString(),
+          testId: testId!,
+          patientId: '1', // Mock hasta ID
+          formData: { ...formData },
+          risk: resultData.risk,
+          score: resultData.score,
+          message: resultData.message,
+          recommendations: resultData.recommendations,
+          createdAt: new Date()
+        };
+        
+        // Mevcut test sonuçlarını al ve yeni sonucu ekle
+        const existingResults = JSON.parse(localStorage.getItem('testResults') || '[]');
+        existingResults.push(fullResult);
+        localStorage.setItem('testResults', JSON.stringify(existingResults));
+        
+        // Test sonuç sayfasına yönlendir
+        navigate(`/test-result/${fullResult.id}`);
+        return;
+      }
+
+      const backendResult = await response.json();
       
+      // Backend sonucunu TestResult formatına çevir
+      const fullResult: TestResult = {
+        id: Date.now().toString(),
+        testId: testId!,
+        patientId: '1', // Mock hasta ID
+        formData: { ...formData },
+        risk: backendResult.risk,
+        score: backendResult.score,
+        message: backendResult.message,
+        recommendations: backendResult.recommendations,
+        createdAt: new Date()
+      };
+      
+      // Mevcut test sonuçlarını al ve yeni sonucu ekle
+      const existingResults = JSON.parse(localStorage.getItem('testResults') || '[]');
+      existingResults.push(fullResult);
+      localStorage.setItem('testResults', JSON.stringify(existingResults));
+      
+      // Test sonuç sayfasına yönlendir
+      navigate(`/test-result/${fullResult.id}`);
+      
+    } catch (error) {
+      console.error('API çağrısı hatası, mock data kullanılıyor:', error);
+      
+      // Hata durumunda fallback: mock data kullan
       const resultData = predictTestResult(testId!, formData);
       
-      // Test sonucunu localStorage'a kaydet
       const fullResult: TestResult = {
         id: Date.now().toString(),
         testId: testId!,
@@ -129,8 +191,6 @@ const TestPage: React.FC = () => {
       
       // Test sonuç sayfasına yönlendir
       navigate(`/test-result/${fullResult.id}`);
-    } catch (error) {
-      console.error('Test hatası:', error);
     } finally {
       setLoading(false);
     }
