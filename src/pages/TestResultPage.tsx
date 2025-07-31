@@ -209,10 +209,8 @@ const TestResultPage: React.FC = () => {
   };
 
   const downloadPDF = () => {
-    // PDF içeriğini oluştur
-    const pdfContent = generatePDFContent();
+    const pdfContent = generateReportContent();
     
-    // Basit bir şekilde window.print() kullanarak PDF oluştur
     const printWindow = window.open('', '_blank');
     if (printWindow) {
       printWindow.document.write(`
@@ -220,22 +218,91 @@ const TestResultPage: React.FC = () => {
           <head>
             <title>Test Raporu - ${testResult?.testId || 'Test'}</title>
             <style>
-              body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
-              .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px; }
-              .section { margin-bottom: 25px; }
-              .section h3 { color: #333; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
-              .chat-message { margin: 10px 0; padding: 10px; border-radius: 5px; }
-              .user-message { background-color: #e3f2fd; text-align: right; }
-              .ai-message { background-color: #f5f5f5; }
-              .message-time { font-size: 12px; color: #666; margin-top: 5px; }
-              .risk-high { color: #d32f2f; }
-              .risk-medium { color: #f57c00; }
-              .risk-low { color: #388e3c; }
-              ul { padding-left: 20px; }
-              li { margin-bottom: 5px; }
+              body { 
+                font-family: 'Inter', 'Manrope', Arial, sans-serif; 
+                margin: 40px; 
+                line-height: 1.6; 
+                color: #0F3978;
+                background: #fff;
+              }
+              .header { 
+                text-align: center; 
+                margin-bottom: 40px; 
+                border-bottom: 3px solid #1B69DE; 
+                padding-bottom: 30px; 
+              }
+              .header h1 {
+                font-family: 'Manrope', Arial, sans-serif;
+                font-weight: 600;
+                font-size: 28px;
+                color: #0F3978;
+                margin-bottom: 10px;
+              }
+              .header h2 {
+                font-family: 'Inter', Arial, sans-serif;
+                font-weight: 500;
+                color: #4787E6;
+                font-size: 18px;
+              }
+              .section { 
+                margin-bottom: 30px; 
+                background: #F8FBFF;
+                padding: 25px;
+                border-radius: 12px;
+                border: 1px solid #E0E7EF;
+              }
+              .section h3 { 
+                font-family: 'Manrope', Arial, sans-serif;
+                font-weight: 600;
+                color: #0F3978; 
+                border-bottom: 2px solid #0ED1B1; 
+                padding-bottom: 10px;
+                font-size: 20px;
+                margin-bottom: 20px;
+              }
+              .chat-message { 
+                margin: 15px 0; 
+                padding: 15px; 
+                border-radius: 12px; 
+                font-family: 'Inter', Arial, sans-serif;
+              }
+              .user-message { 
+                background: linear-gradient(90deg, #0ED1B1 0%, #1B69DE 100%);
+                color: white;
+                text-align: right; 
+              }
+              .ai-message { 
+                background: #F0F6FF;
+                border: 1px solid #E0E7EF;
+                color: #0F3978;
+              }
+              .message-time { 
+                font-size: 12px; 
+                color: #4787E6; 
+                margin-top: 8px; 
+                opacity: 0.8;
+              }
+              .risk-high { color: #d32f2f; font-weight: 600; }
+              .risk-medium { color: #f57c00; font-weight: 600; }
+              .risk-low { color: #388e3c; font-weight: 600; }
+              ul { padding-left: 25px; }
+              li { 
+                margin-bottom: 8px; 
+                font-family: 'Inter', Arial, sans-serif;
+                line-height: 1.5;
+              }
+              .logo-area {
+                text-align: center;
+                margin-bottom: 20px;
+                color: #0ED1B1;
+                font-family: 'Manrope', Arial, sans-serif;
+                font-weight: 700;
+                font-size: 24px;
+              }
             </style>
           </head>
           <body>
+            <div class="logo-area">MediRisk</div>
             ${pdfContent}
           </body>
         </html>
@@ -245,7 +312,117 @@ const TestResultPage: React.FC = () => {
     }
   };
 
-  const generatePDFContent = () => {
+  const downloadWord = () => {
+    const wordContent = generateReportContent();
+    
+    const htmlContent = `
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Test Raporu - ${testResult?.testId || 'Test'}</title>
+          <style>
+            body { 
+              font-family: 'Inter', 'Manrope', Arial, sans-serif; 
+              margin: 40px; 
+              line-height: 1.6; 
+              color: #0F3978;
+              background: #fff;
+            }
+            .header { 
+              text-align: center; 
+              margin-bottom: 40px; 
+              border-bottom: 3px solid #1B69DE; 
+              padding-bottom: 30px; 
+            }
+            .header h1 {
+              font-family: 'Manrope', Arial, sans-serif;
+              font-weight: 600;
+              font-size: 28px;
+              color: #0F3978;
+              margin-bottom: 10px;
+            }
+            .header h2 {
+              font-family: 'Inter', Arial, sans-serif;
+              font-weight: 500;
+              color: #4787E6;
+              font-size: 18px;
+            }
+            .section { 
+              margin-bottom: 30px; 
+              background: #F8FBFF;
+              padding: 25px;
+              border-radius: 12px;
+              border: 1px solid #E0E7EF;
+            }
+            .section h3 { 
+              font-family: 'Manrope', Arial, sans-serif;
+              font-weight: 600;
+              color: #0F3978; 
+              border-bottom: 2px solid #0ED1B1; 
+              padding-bottom: 10px;
+              font-size: 20px;
+              margin-bottom: 20px;
+            }
+            .chat-message { 
+              margin: 15px 0; 
+              padding: 15px; 
+              border-radius: 12px; 
+              font-family: 'Inter', Arial, sans-serif;
+            }
+            .user-message { 
+              background: linear-gradient(90deg, #0ED1B1 0%, #1B69DE 100%);
+              color: white;
+              text-align: right; 
+            }
+            .ai-message { 
+              background: #F0F6FF;
+              border: 1px solid #E0E7EF;
+              color: #0F3978;
+            }
+            .message-time { 
+              font-size: 12px; 
+              color: #4787E6; 
+              margin-top: 8px; 
+              opacity: 0.8;
+            }
+            .risk-high { color: #d32f2f; font-weight: 600; }
+            .risk-medium { color: #f57c00; font-weight: 600; }
+            .risk-low { color: #388e3c; font-weight: 600; }
+            ul { padding-left: 25px; }
+            li { 
+              margin-bottom: 8px; 
+              font-family: 'Inter', Arial, sans-serif;
+              line-height: 1.5;
+            }
+            .logo-area {
+              text-align: center;
+              margin-bottom: 20px;
+              color: #0ED1B1;
+              font-family: 'Manrope', Arial, sans-serif;
+              font-weight: 700;
+              font-size: 24px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="logo-area">MediRisk</div>
+          ${wordContent}
+        </body>
+      </html>
+    `;
+
+    const blob = new Blob([htmlContent], { type: 'application/vnd.ms-word' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Test-Raporu-${testResult?.testId || 'Test'}.doc`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const generateReportContent = () => {
     if (!testResult) return '';
 
     const riskClass = `risk-${testResult.risk}`;
@@ -755,6 +932,7 @@ const TestResultPage: React.FC = () => {
                   color: '#0F3978',
                   borderColor: '#0ED1B1',
                   background: '#fff',
+                  mb: 2,
                   '&:hover': {
                     borderColor: '#1B69DE',
                     background: '#F0F6FF'
@@ -762,6 +940,27 @@ const TestResultPage: React.FC = () => {
                 }}
               >
                 PDF İndir
+              </Button>
+              <Button
+                fullWidth
+                variant="outlined"
+                startIcon={<FileDownload />}
+                onClick={() => downloadWord()}
+                sx={{
+                  py: 1.5,
+                  fontWeight: 600,
+                  fontFamily: 'Manrope, Arial, sans-serif',
+                  borderRadius: 2,
+                  color: '#0F3978',
+                  borderColor: '#4787E6',
+                  background: '#fff',
+                  '&:hover': {
+                    borderColor: '#1B69DE',
+                    background: '#F0F6FF'
+                  }
+                }}
+              >
+                Word İndir
               </Button>
             </CardContent>
           </Card>
@@ -890,6 +1089,24 @@ const TestResultPage: React.FC = () => {
                 }}
               >
                 PDF İndir
+              </Button>
+              <Button
+                fullWidth
+                variant="contained"
+                startIcon={<FileDownload />}
+                onClick={() => downloadWord()}
+                sx={{
+                  mb: 2,
+                  borderRadius: 2,
+                  fontFamily: 'Manrope, Arial, sans-serif',
+                  fontWeight: 600,
+                  background: '#4787E6',
+                  '&:hover': {
+                    background: '#0F3978'
+                  }
+                }}
+              >
+                Word İndir
               </Button>
               <Button
                 fullWidth
@@ -1069,6 +1286,7 @@ const TestResultPage: React.FC = () => {
                 startIcon={<FileDownload />}
                 onClick={() => downloadPDF()}
                 sx={{
+                  mr: 2,
                   borderRadius: 2,
                   borderColor: '#0ED1B1',
                   color: '#0F3978',
@@ -1081,7 +1299,26 @@ const TestResultPage: React.FC = () => {
                   }
                 }}
               >
-                İndir
+                PDF İndir
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<FileDownload />}
+                onClick={() => downloadWord()}
+                sx={{
+                  borderRadius: 2,
+                  borderColor: '#4787E6',
+                  color: '#0F3978',
+                  background: '#fff',
+                  fontFamily: 'Manrope, Arial, sans-serif',
+                  fontWeight: 600,
+                  '&:hover': {
+                    borderColor: '#1B69DE',
+                    background: '#F0F6FF'
+                  }
+                }}
+              >
+                Word İndir
               </Button>
             </Box>
           </Paper>
